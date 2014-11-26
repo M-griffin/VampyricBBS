@@ -4,6 +4,8 @@
     Inital Ztelnet Source code (c) Zack Booth Simpson http://www.mine-control.com/zack/
     Adapted to a bbs frontend.
 
+    Inital Message and JAM interface recoded from GryphonBBS for linux from Darryl Perry.
+
     01/29/04 - Init Coding
     01/30/04 - Changed 1 line input to 1 char input, changed write to printf
                for way faster display, fixed buffering to reset after 80 chars
