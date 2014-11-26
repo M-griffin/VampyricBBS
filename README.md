@@ -1,7 +1,7 @@
 VampyricBBS
 ===========
 
-VampyricBBS Software Pre-Alpha 1 (Win32)
+VampyricBBS Software Pre-Alpha 1 (Win32) 2004
 
 VampyricBBS is the first rough draft of my own BBS software.  
 Originally developed in (Win32) using DevC++.  Development was later moved to *nix/BSD and renamed to EnthralBBS.
