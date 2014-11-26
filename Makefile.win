@@ -1,0 +1,86 @@
+# Project: Project1
+# Makefile created by Dev-C++ 4.9.8.10
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = zocket.o ztelnetserver.o zregexp.o menus.o config.o ansiout.o users.o menu_edit.o menu_func.o language.o logon.o main_system.o misc.o acs.o msgs.o msg_edit.o msg_read.o msg_fse.o msgread_ini.o msg_ll.o $(RES)
+LINKOBJ  = zocket.o ztelnetserver.o zregexp.o menus.o config.o ansiout.o users.o menu_edit.o menu_func.o language.o logon.o main_system.o misc.o acs.o msgs.o msg_edit.o msg_read.o msg_fse.o msgread_ini.o msg_ll.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -s ../../../../Dev-Cpp/lib/libwsock32.a libpcreposix_windows.a libpcre.a libpcre_windows.a smapiStatic.a -s 
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/include/c++"  -I"C:/Dev-Cpp/include/c++/mingw32"  -I"C:/Dev-Cpp/include/c++/backward"  -I"C:/Dev-Cpp/include"  -I"C:/Documents and Settings/Michael/Desktop/sptk-2.2-beta2" 
+BIN  = Project1.exe
+CXXFLAGS = $(CXXINCS)  -fexpensive-optimizations -O3
+CFLAGS = $(INCS)  -fexpensive-optimizations -O3
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before Project1.exe all-after
+
+
+clean: clean-custom
+	rm -f $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "Project1.exe" $(LIBS)
+
+zocket.o: zocket.cpp C:/Dev-Cpp/include/windows.h   C:/Dev-Cpp/include/winsock.h C:/Dev-Cpp/include/wsipx.h   C:/Dev-Cpp/include/c++/string zocket.h zaddress.h zregexp.h
+	$(CPP) -c zocket.cpp -o zocket.o $(CXXFLAGS)
+
+ztelnetserver.o: ztelnetserver.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/process.h   C:/Dev-Cpp/include/sys/types.h ztelnetserver.h zocket.h zaddress.h   C:/Dev-Cpp/include/winsock.h struct.h main_system.h users.h menu_func.h   menus.h config.h C:/Dev-Cpp/include/c++/string ansiout.h language.h
+	$(CPP) -c ztelnetserver.cpp -o ztelnetserver.o $(CXXFLAGS)
+
+zregexp.o: zregexp.cpp pcreposix.h C:/Dev-Cpp/include/stdlib.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/c++/string zregexp.h
+	$(CPP) -c zregexp.cpp -o zregexp.o $(CXXFLAGS)
+
+menus.o: menus.cpp C:/Dev-Cpp/include/stdio.h C:/Dev-Cpp/include/_mingw.h   C:/Dev-Cpp/include/stddef.h C:/Dev-Cpp/include/stdarg.h   C:/Dev-Cpp/include/c++/string struct.h ztelnetserver.h zocket.h   zaddress.h C:/Dev-Cpp/include/winsock.h menus.h
+	$(CPP) -c menus.cpp -o menus.o $(CXXFLAGS)
+
+config.o: config.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/c++/string   C:/Dev-Cpp/include/c++/fstream struct.h ztelnetserver.h zocket.h   zaddress.h C:/Dev-Cpp/include/winsock.h config.h
+	$(CPP) -c config.cpp -o config.o $(CXXFLAGS)
+
+ansiout.o: ansiout.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/c++/string struct.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h   ansiout.h
+	$(CPP) -c ansiout.cpp -o ansiout.o $(CXXFLAGS)
+
+users.o: users.cpp C:/Dev-Cpp/include/stdio.h C:/Dev-Cpp/include/_mingw.h   C:/Dev-Cpp/include/stddef.h C:/Dev-Cpp/include/stdarg.h   C:/Dev-Cpp/include/c++/string users.h struct.h ztelnetserver.h zocket.h   zaddress.h C:/Dev-Cpp/include/winsock.h
+	$(CPP) -c users.cpp -o users.o $(CXXFLAGS)
+
+menu_edit.o: menu_edit.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/c++/string struct.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h   ansiout.h misc.h menu_edit.h menus.h menu_func.h
+	$(CPP) -c menu_edit.cpp -o menu_edit.o $(CXXFLAGS)
+
+menu_func.o: menu_func.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/stdlib.h   C:/Dev-Cpp/include/time.h C:/Dev-Cpp/include/sys/types.h   C:/Dev-Cpp/include/process.h C:/Dev-Cpp/include/c++/string struct.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h   menu_func.h menus.h menu_edit.h msg_edit.h msgs.h msg_read.h msgapi.h   compiler.h C:/Dev-Cpp/include/share.h C:/Dev-Cpp/include/fcntl.h   C:/Dev-Cpp/include/io.h C:/Dev-Cpp/include/sys/stat.h typedefs.h   stamp.h api_brow.h msgread_ini.h msg_ll.h msg_fse.h ansiout.h logon.h   language.h users.h misc.h
+	$(CPP) -c menu_func.cpp -o menu_func.o $(CXXFLAGS)
+
+language.o: language.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/ctype.h   C:/Dev-Cpp/include/c++/string C:/Dev-Cpp/include/c++/fstream language.h   struct.h ztelnetserver.h zocket.h zaddress.h   C:/Dev-Cpp/include/winsock.h
+	$(CPP) -c language.cpp -o language.o $(CXXFLAGS)
+
+logon.o: logon.cpp C:/Dev-Cpp/include/stdio.h C:/Dev-Cpp/include/_mingw.h   C:/Dev-Cpp/include/stddef.h C:/Dev-Cpp/include/stdarg.h   C:/Dev-Cpp/include/c++/string struct.h ztelnetserver.h zocket.h   zaddress.h C:/Dev-Cpp/include/winsock.h logon.h language.h users.h   ansiout.h menu_func.h menus.h misc.h
+	$(CPP) -c logon.cpp -o logon.o $(CXXFLAGS)
+
+main_system.o: main_system.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/c++/string struct.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h   main_system.h users.h menu_func.h menus.h ansiout.h misc.h
+	$(CPP) -c main_system.cpp -o main_system.o $(CXXFLAGS)
+
+misc.o: misc.cpp C:/Dev-Cpp/include/stdio.h C:/Dev-Cpp/include/_mingw.h   C:/Dev-Cpp/include/stddef.h C:/Dev-Cpp/include/stdarg.h struct.h   C:/Dev-Cpp/include/windows.h ztelnetserver.h zocket.h zaddress.h   C:/Dev-Cpp/include/winsock.h
+	$(CPP) -c misc.cpp -o misc.o $(CXXFLAGS)
+
+acs.o: acs.cpp C:/Dev-Cpp/include/stdio.h C:/Dev-Cpp/include/_mingw.h   C:/Dev-Cpp/include/stddef.h C:/Dev-Cpp/include/stdarg.h   C:/Dev-Cpp/include/ctype.h struct.h C:/Dev-Cpp/include/windows.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h acs.h   misc.h
+	$(CPP) -c acs.cpp -o acs.o $(CXXFLAGS)
+
+msgs.o: msgs.cpp C:/Dev-Cpp/include/stdio.h C:/Dev-Cpp/include/_mingw.h   C:/Dev-Cpp/include/stddef.h C:/Dev-Cpp/include/stdarg.h   C:/Dev-Cpp/include/c++/string struct.h ztelnetserver.h zocket.h   zaddress.h C:/Dev-Cpp/include/winsock.h msgapi.h compiler.h   C:/Dev-Cpp/include/share.h C:/Dev-Cpp/include/fcntl.h   C:/Dev-Cpp/include/io.h C:/Dev-Cpp/include/sys/stat.h   C:/Dev-Cpp/include/process.h typedefs.h stamp.h api_brow.h msgs.h
+	$(CPP) -c msgs.cpp -o msgs.o $(CXXFLAGS)
+
+msg_edit.o: msg_edit.cpp C:/Dev-Cpp/include/c++/string misc.h struct.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h   msgapi.h compiler.h C:/Dev-Cpp/include/share.h   C:/Dev-Cpp/include/fcntl.h C:/Dev-Cpp/include/io.h   C:/Dev-Cpp/include/sys/stat.h C:/Dev-Cpp/include/process.h typedefs.h   stamp.h api_brow.h msg_edit.h msgs.h acs.h
+	$(CPP) -c msg_edit.cpp -o msg_edit.o $(CXXFLAGS)
+
+msg_read.o: msg_read.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/time.h   C:/Dev-Cpp/include/sys/types.h C:/Dev-Cpp/include/ctype.h struct.h   C:/Dev-Cpp/include/windows.h ztelnetserver.h zocket.h zaddress.h   C:/Dev-Cpp/include/winsock.h msgs.h ansiout.h msgapi.h compiler.h   C:/Dev-Cpp/include/share.h C:/Dev-Cpp/include/fcntl.h   C:/Dev-Cpp/include/io.h C:/Dev-Cpp/include/sys/stat.h   C:/Dev-Cpp/include/process.h typedefs.h stamp.h api_brow.h msg_read.h   msgread_ini.h C:/Dev-Cpp/include/c++/string msg_ll.h menu_func.h   menus.h misc.h msg_fse.h language.h
+	$(CPP) -c msg_read.cpp -o msg_read.o $(CXXFLAGS)
+
+msg_fse.o: msg_fse.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/c++/string   C:/Dev-Cpp/include/c++/fstream msg_fse.h struct.h ztelnetserver.h   zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h ansiout.h
+	$(CPP) -c msg_fse.cpp -o msg_fse.o $(CXXFLAGS)
+
+msgread_ini.o: msgread_ini.cpp C:/Dev-Cpp/include/stdio.h   C:/Dev-Cpp/include/_mingw.h C:/Dev-Cpp/include/stddef.h   C:/Dev-Cpp/include/stdarg.h C:/Dev-Cpp/include/c++/string   C:/Dev-Cpp/include/c++/fstream struct.h ztelnetserver.h zocket.h   zaddress.h C:/Dev-Cpp/include/winsock.h msgread_ini.h
+	$(CPP) -c msgread_ini.cpp -o msgread_ini.o $(CXXFLAGS)
+
+msg_ll.o: msg_ll.cpp C:/Dev-Cpp/include/c++/string struct.h   ztelnetserver.h zocket.h zaddress.h C:/Dev-Cpp/include/winsock.h   msg_ll.h ansiout.h misc.h
+	$(CPP) -c msg_ll.cpp -o msg_ll.o $(CXXFLAGS)

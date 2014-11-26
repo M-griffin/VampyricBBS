@@ -1,0 +1,110 @@
+
+
+#######################################################################
+# Quick Language file for Vampyric BBS Prompts, All Lines with a      #
+# # or ; are comments..  Blank Lines don't matter either!             #
+#                                                                     #
+# Quick Pipe Code List                                                #
+#                                                                     #
+# |00 - |23 are Foregroud and Background Colors                       #
+# |CR - Carriage Return / Newline                                     #
+# |CS - Clear Screen                                                  #
+# |XY - X,Y Ansi Screen Position.. Ie.. |XY8025 or |XY0101            #
+#                                                                     #
+#                                                                     #
+#                                                                     #
+#######################################################################
+
+
+
+#######################################################################
+# INITAL CONNECTION                                                   #
+#######################################################################
+
+
+; Detecting Emulation
+001 Detecting Emulation 
+
+; Ansi Detected!
+002 Emulation Detected! Ansi
+
+; Ansi Detected!
+003 Emulation Not Detected, Ansi Defaulted!
+
+
+#######################################################################
+# USER LOGIN                                                          #
+#######################################################################
+
+
+; Login Prompt
+004 Login: 
+
+; Password Prompt
+005 Password:
+
+; Illegal login
+006 Illegal login attempt has been logged with IP Address!
+
+
+#######################################################################
+# NEW USER REGISTRATION                                               #
+#######################################################################
+
+
+; register as a new user?
+007 |CR|15r|07eg|08ister as a new user |15(|07Y/N|15)|08? : 
+
+; Enter your user name / handle
+008 |CR|CR|15e|07nt|08er your username / handle  : 
+
+; Enter your user name / real name
+009 |CR|15e|07nt|08er your real name          : 
+
+; Enter your password (case sensitive)
+010 |CR|15p|07as|08sword |15(|07case sensitive|15)     |08: 
+
+; Sex, Male or Female
+011 |CR|15s|07e|08x |15(|07M/F|15)?                    |08: 
+
+; Birthday  mm/dd/yyyy
+012 |CR|15B|07ir|08thdate                     : 
+
+; Email Address
+013 |CR|CR|15E|07ma|08il Address                 : 
+
+; Keep Email Address Private
+014 |CR|15K|07ee|08p Email Private |15(|07Y/N|15)|08?     : 
+
+; User Note
+015 |CR|CR|15D|07es|08ired User Note             : 
+
+; Secret Word
+016 |CR|CR|15S|07ec|08ret Word |15(|07forgot password|15)|08?: 
+
+; Modify which User Info
+022 |XY1022|15M|07od|08ify Which Entry #?: 
+
+
+#######################################################################
+# NEW USER REGISTRATION - Error Messages                              #
+#######################################################################
+
+
+; Handle is already in use
+018 |CR|CR|10S|02or|08ry but this handle is already in use!|CR 
+
+
+#######################################################################
+# Message System Promts                                               #
+#######################################################################
+
+
+; Posting Messages / Message Subject
+019 |CR|15m|07es|08sage subject: 
+
+; Posting Messages / Message To
+020 |CR|15m|07es|08sage to: 
+
+; Posting Messages / Message Subject
+021 |CR|15s|07av|08e this message |15(|07Y|15/|07N|15) |08: 
