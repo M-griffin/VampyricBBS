@@ -3,7 +3,8 @@
 
 #include <string>
 
-typedef struct msgread_ini {
+typedef struct msgread_ini
+{
 
     int Top;
     int Bot;
@@ -11,9 +12,9 @@ typedef struct msgread_ini {
     // Message Read .ini File
     bool msg_exists();
     void msg_create();
-    void msg_check(std::string cfgdata);
+    void msg_check ( std::string cfgdata );
     void msg_parse();
 
-}msgread_ini;
+} msgread_ini;
 
 #endif

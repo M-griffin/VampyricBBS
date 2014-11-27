@@ -90,13 +90,13 @@ struct _browse
     XMSG msg;
     word matched;
 
-    int (*Begin_Ptr) (BROWSE * b);
-    int (*Status_Ptr) (BROWSE * b, char *aname, int colour);
-    int (*Idle_Ptr) (BROWSE * b);
-    int (*Display_Ptr) (BROWSE * b);
-    int (*After_Ptr) (BROWSE * b);
-    int (*End_Ptr) (BROWSE * b);
-    int (*Match_Ptr) (BROWSE * b);
+    int ( *Begin_Ptr ) ( BROWSE * b );
+    int ( *Status_Ptr ) ( BROWSE * b, char *aname, int colour );
+    int ( *Idle_Ptr ) ( BROWSE * b );
+    int ( *Display_Ptr ) ( BROWSE * b );
+    int ( *After_Ptr ) ( BROWSE * b );
+    int ( *End_Ptr ) ( BROWSE * b );
+    int ( *Match_Ptr ) ( BROWSE * b );
 };
 
 #endif

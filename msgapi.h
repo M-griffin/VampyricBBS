@@ -173,8 +173,8 @@ typedef struct _xmsg
     UMSGID replyto;
     UMSGID replies[MAX_REPLY];
     dword umsgid;               /* UMSGID of this message, if (attr&MSGUID) */
-                                /* This field is only stored on disk -- it  *
-                                 * is not read into memory.                 */
+    /* This field is only stored on disk -- it  *
+     * is not read into memory.                 */
 
     byte __ftsc_date[20];       /* Obsolete date information.  If it weren't
                                  * for the fact that FTSC standards say that
@@ -229,26 +229,26 @@ struct _msgapi
 
     struct _apifuncs
     {
-        sword(_XPENTRY * CloseArea) (HAREA mh);
-        MSGH *(_XPENTRY * OpenMsg) (HAREA mh, word mode, dword n);
-        sword(_XPENTRY * CloseMsg) (MSGH * msgh);
-        dword(_XPENTRY * ReadMsg) (MSGH * msgh, XMSG * msg, dword ofs, dword bytes, byte * text, dword cbyt, byte * ctxt);
-        sword(_XPENTRY * WriteMsg) (MSGH * msgh, word append, XMSG * msg, byte * text, dword textlen, dword totlen, dword clen, byte * ctxt);
-        sword(_XPENTRY * KillMsg) (HAREA mh, dword msgnum);
-        sword(_XPENTRY * Lock) (HAREA mh);
-        sword(_XPENTRY * Unlock) (HAREA mh);
-        sword(_XPENTRY * SetCurPos) (MSGH * msgh, dword pos);
-        dword(_XPENTRY * GetCurPos) (MSGH * msgh);
-        UMSGID(_XPENTRY * MsgnToUid) (HAREA mh, dword msgnum);
-        dword(_XPENTRY * UidToMsgn) (HAREA mh, UMSGID umsgid, word type);
-        dword(_XPENTRY * GetHighWater) (HAREA mh);
-        sword(_XPENTRY * SetHighWater) (HAREA mh, dword hwm);
-        dword(_XPENTRY * GetTextLen) (MSGH * msgh);
-        dword(_XPENTRY * GetCtrlLen) (MSGH * msgh);
+        sword ( _XPENTRY * CloseArea ) ( HAREA mh );
+        MSGH * ( _XPENTRY * OpenMsg ) ( HAREA mh, word mode, dword n );
+        sword ( _XPENTRY * CloseMsg ) ( MSGH * msgh );
+        dword ( _XPENTRY * ReadMsg ) ( MSGH * msgh, XMSG * msg, dword ofs, dword bytes, byte * text, dword cbyt, byte * ctxt );
+        sword ( _XPENTRY * WriteMsg ) ( MSGH * msgh, word append, XMSG * msg, byte * text, dword textlen, dword totlen, dword clen, byte * ctxt );
+        sword ( _XPENTRY * KillMsg ) ( HAREA mh, dword msgnum );
+        sword ( _XPENTRY * Lock ) ( HAREA mh );
+        sword ( _XPENTRY * Unlock ) ( HAREA mh );
+        sword ( _XPENTRY * SetCurPos ) ( MSGH * msgh, dword pos );
+        dword ( _XPENTRY * GetCurPos ) ( MSGH * msgh );
+        UMSGID ( _XPENTRY * MsgnToUid ) ( HAREA mh, dword msgnum );
+        dword ( _XPENTRY * UidToMsgn ) ( HAREA mh, UMSGID umsgid, word type );
+        dword ( _XPENTRY * GetHighWater ) ( HAREA mh );
+        sword ( _XPENTRY * SetHighWater ) ( HAREA mh, dword hwm );
+        dword ( _XPENTRY * GetTextLen ) ( MSGH * msgh );
+        dword ( _XPENTRY * GetCtrlLen ) ( MSGH * msgh );
         /* Version 1 Functions */
-        UMSGID (_XPENTRY * GetNextUid)(HAREA harea);
+        UMSGID ( _XPENTRY * GetNextUid ) ( HAREA harea );
         /* Version 2 Functions */
-        dword  (_XPENTRY * GetHash)(HAREA harea, dword msgnum);
+        dword  ( _XPENTRY * GetHash ) ( HAREA harea, dword msgnum );
     } *api;
 
     /*
@@ -376,42 +376,42 @@ extern struct _minf _stdc mi;
 
 #define MsgCvtFTSCDateToBinary(a, b) ASCII_Date_To_Binary(a,b)
 
-SMAPI_EXT sword _XPENTRY MsgOpenApi(struct _minf *minf);
-SMAPI_EXT sword _XPENTRY MsgCloseApi(void);
+SMAPI_EXT sword _XPENTRY MsgOpenApi ( struct _minf *minf );
+SMAPI_EXT sword _XPENTRY MsgCloseApi ( void );
 
-SMAPI_EXT MSGA *_XPENTRY MsgOpenArea(byte * name, word mode, word type);
-SMAPI_EXT int MsgDeleteBase(char * name, word type);
-sword _XPENTRY MsgValidate(word type, byte * name);
-sword _XPENTRY MsgBrowseArea(BROWSE * b);
+SMAPI_EXT MSGA *_XPENTRY MsgOpenArea ( byte * name, word mode, word type );
+SMAPI_EXT int MsgDeleteBase ( char * name, word type );
+sword _XPENTRY MsgValidate ( word type, byte * name );
+sword _XPENTRY MsgBrowseArea ( BROWSE * b );
 
-sword MSGAPI InvalidMsgh(MSGH * msgh);
-sword MSGAPI InvalidMh(MSGA * mh);
-sword MSGAPI InvalidMsg(XMSG * msg);
+sword MSGAPI InvalidMsgh ( MSGH * msgh );
+sword MSGAPI InvalidMh ( MSGA * mh );
+sword MSGAPI InvalidMsg ( XMSG * msg );
 
-void _XPENTRY SquishSetMaxMsg(MSGA * sq, dword max_msgs, dword skip_msgs, dword age);
-SMAPI_EXT dword _XPENTRY SquishHash(byte * f);
+void _XPENTRY SquishSetMaxMsg ( MSGA * sq, dword max_msgs, dword skip_msgs, dword age );
+SMAPI_EXT dword _XPENTRY SquishHash ( byte * f );
 
-MSGA *MSGAPI SdmOpenArea(byte * name, word mode, word type);
-sword MSGAPI SdmValidate(byte * name);
-int SdmDeleteBase(char * name);
+MSGA *MSGAPI SdmOpenArea ( byte * name, word mode, word type );
+sword MSGAPI SdmValidate ( byte * name );
+int SdmDeleteBase ( char * name );
 
-MSGA *MSGAPI SquishOpenArea(byte * name, word mode, word type);
-sword MSGAPI SquishValidate(byte * name);
-int SquishDeleteBase(char * name);
+MSGA *MSGAPI SquishOpenArea ( byte * name, word mode, word type );
+sword MSGAPI SquishValidate ( byte * name );
+int SquishDeleteBase ( char * name );
 
-MSGA *MSGAPI JamOpenArea(byte * name, word mode, word type);
-sword MSGAPI JamValidate(byte * name);
-int JamDeleteBase(char * name);
+MSGA *MSGAPI JamOpenArea ( byte * name, word mode, word type );
+sword MSGAPI JamValidate ( byte * name );
+int JamDeleteBase ( char * name );
 void JamCloseOpenAreas();
 
-SMAPI_EXT byte *_XPENTRY CvtCtrlToKludge(byte * ctrl);
-SMAPI_EXT byte *_XPENTRY GetCtrlToken(byte * where, byte * what);
-SMAPI_EXT byte *_XPENTRY CopyToControlBuf(byte * txt, byte ** newtext, unsigned *length);
-void _XPENTRY ConvertControlInfo(byte * ctrl, NETADDR * orig, NETADDR * dest);
-word _XPENTRY NumKludges(char *txt);
-SMAPI_EXT void _XPENTRY RemoveFromCtrl(byte * ctrl, byte * what);
-SMAPI_EXT dword _XPENTRY GenMsgId(char *seqdir, unsigned long max_outrun);
-SMAPI_EXT dword _XPENTRY GenMsgIdEx(char *seqdir, unsigned long max_outrun, dword (*altGenMsgId)(void), char **errstr);
+SMAPI_EXT byte *_XPENTRY CvtCtrlToKludge ( byte * ctrl );
+SMAPI_EXT byte *_XPENTRY GetCtrlToken ( byte * where, byte * what );
+SMAPI_EXT byte *_XPENTRY CopyToControlBuf ( byte * txt, byte ** newtext, unsigned *length );
+void _XPENTRY ConvertControlInfo ( byte * ctrl, NETADDR * orig, NETADDR * dest );
+word _XPENTRY NumKludges ( char *txt );
+SMAPI_EXT void _XPENTRY RemoveFromCtrl ( byte * ctrl, byte * what );
+SMAPI_EXT dword _XPENTRY GenMsgId ( char *seqdir, unsigned long max_outrun );
+SMAPI_EXT dword _XPENTRY GenMsgIdEx ( char *seqdir, unsigned long max_outrun, dword ( *altGenMsgId ) ( void ), char **errstr );
 
 /* Check version of smapi library
  * return zero if test passed
@@ -423,28 +423,28 @@ SMAPI_EXT dword _XPENTRY GenMsgIdEx(char *seqdir, unsigned long max_outrun, dwor
   }
   CheckSmapiVersion( ..., smapidate());
  */
-SMAPI_EXT int _XPENTRY CheckSmapiVersion( int need_major, int need_minor,
-                        int need_patch, const char *cvs_date_string );
+SMAPI_EXT int _XPENTRY CheckSmapiVersion ( int need_major, int need_minor,
+        int need_patch, const char *cvs_date_string );
 
 /*  Return MSGAPI error text (string constant).
  */
-SMAPI_EXT char * _XPENTRY  strmerr(int msgapierr);
+SMAPI_EXT char * _XPENTRY  strmerr ( int msgapierr );
 
 
 #if !defined(__FLAT__)
 #ifndef farread
-sword far pascal farread(sword handle, byte far * buf, word len);
+sword far pascal farread ( sword handle, byte far * buf, word len );
 #endif
 #ifndef farwrite
-sword far pascal farwrite(sword handle, byte far * buf, word len);
+sword far pascal farwrite ( sword handle, byte far * buf, word len );
 #endif
 #endif
 
-byte *_fast Address(NETADDR * a);
-byte *StripNasties(byte * str);
+byte *_fast Address ( NETADDR * a );
+byte *StripNasties ( byte * str );
 
 #if defined(__DOS__)
-sword far pascal shareloaded(void);
+sword far pascal shareloaded ( void );
 #elif defined(__OS2__) || defined(__NT__) || defined(__UNIX__)
 #define shareloaded() TRUE
 #else
@@ -456,4 +456,3 @@ sword far pascal shareloaded(void);
 #ifdef __cplusplus
 }
 #endif
-

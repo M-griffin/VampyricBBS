@@ -1,191 +1,191 @@
- /* $Id: compiler.h,v 1.171.2.8 2003/03/07 13:28:33 stas_degteff Exp $
+/* $Id: compiler.h,v 1.171.2.8 2003/03/07 13:28:33 stas_degteff Exp $
 
- *  SMAPI; Modified Squish MSGAPI
+*  SMAPI; Modified Squish MSGAPI
+*
+*  Squish MSGAPI0 is copyright 1991 by Scott J. Dudley.  All rights reserved.
+*  Modifications released to the public domain.
+*
+*  Use of this file is subject to the restrictions contain in the Squish
+*  MSGAPI0 licence agreement.  Please refer to licence.txt for complete
+*  details of the licencing restrictions.  If you do not find the text
+*  of this agreement in licence.txt, or if you do not have this file,
+*  you should contact Scott Dudley at FidoNet node 1:249/106 or Internet
+*  e-mail Scott.Dudley@f106.n249.z1.fidonet.org.
+*
+*  In no event should you proceed to use any of the source files in this
+*  archive without having accepted the terms of the MSGAPI0 licensing
+*  agreement, or such other agreement as you are able to reach with the
+*  author.
+*
+*  Modifications from MSGAPI are made by HUSKY: http://husky.sf.net
+*/
+
+/*
+ * Please define this compiler-specific stuff for each new compiler:
  *
- *  Squish MSGAPI0 is copyright 1991 by Scott J. Dudley.  All rights reserved.
- *  Modifications released to the public domain.
+ * _stdc    - Standard calling sequence.  This should be the type of function
+ *            required for function pointers for qsort() et al.
  *
- *  Use of this file is subject to the restrictions contain in the Squish
- *  MSGAPI0 licence agreement.  Please refer to licence.txt for complete
- *  details of the licencing restrictions.  If you do not find the text
- *  of this agreement in licence.txt, or if you do not have this file,
- *  you should contact Scott Dudley at FidoNet node 1:249/106 or Internet
- *  e-mail Scott.Dudley@f106.n249.z1.fidonet.org.
+ * _fast    - Fastest calling sequence supported.  If the default calling
+ *            sequence is the fastest, or if your compiler only has one,
+ *            define this to nothing.
  *
- *  In no event should you proceed to use any of the source files in this
- *  archive without having accepted the terms of the MSGAPI0 licensing
- *  agreement, or such other agreement as you are able to reach with the
- *  author.
+ * _intr    - For defining interrupt functions.  For some idiotic reason,
+ *            MSC requires that interrupt routines be declared
+ *            as "cdecl interrupt", instead of just "interrupt".
  *
- *  Modifications from MSGAPI are made by HUSKY: http://husky.sf.net
+ * _intcast - interrupt cast modifyer
+ *
+ * _veccast - vector cast modifyer
+ *
+ * far      - use pointer with any segment part, actually for x86 16 bit only
+ *            and in other cases must be set to empty value
+ *
+ * near     - (used for x86 16 bit only) use one-segment pointer
+ *
+ * pascal   - pascal style calling conversion code modifyer
+ *
+ * cdecl    - C declarations modifyer (alternate to pascal usually)
+ *            Declare if compiler don't support this.
+ *
+ * _loadds  - (used for x86 16 bit only) 'load data segment' code modifyer
+ *
+ * SMAPI_EXT - external variables & external functions call modifier
+ *             (usualy 'extern' for static linkage)
+ *
+ * _XPENTRY  - system procedures calling (conversion) modifyer
+ *             ("pascal", "_system" & etc)
+ *
+ *
+ *======================
+ * HAS_* please set to 1 for usage: #if HAS_...
+ *======================
+ * HAS_snprintf        - snprintf() presents
+ * HAS_asprintf        - asprintf() presents
+ * HAS_asnprintf       - asnprintf() presents
+ * HAS_vasprintf       - vasprintf() presents
+ * HAS_vsnprintf       - vsnprintf() presents
+ * HAS_spawnvp         - spawnwp() presents
+ * HAS_getpid          - getpid() presents
+ * HAS_mktime          - mktime() presents or defined here
+ * HAS_strftime        - strftime() presents
+ * HAS_sopen           - sopen() presents
+ * HAS_sleep           - sleep() presents or defined here
+ * HAS_dos_read        - dos_read() presents or defined here
+ * HAS_popen_close     - popen(); pclose() ("pipe open" and "pipe close")
+ * HAS_strupr         - strupr() presents
+ * HAS_strcasecmp      - strcasecmp()   usualy in <string.h>
+ * HAS_strncasecmp     - strncasecmp()  usualy in <string.h>
+ * HAS_stricmp         - stricmp()   eq strcasecmp()
+ * HAS_strnicmp        - strnicmp()  eq strncasecmp()
+ * HAS_strlwr          - strlwr()   lower string (string.h)
+ * HAS_strupr          - strupr()   upper string (string.h)
+ *
+ * HAS_MALLOC_H        - may be used "#include <malloc.h>" for malloc() etc.
+ * HAS_DOS_H           - may be used "#include <dos.h>"
+ * HAS_DPMI_H          - may be used "#include <dpmi.h>"
+ * HAS_DIR_H           - may be used "#include <dir.h>" for findfirst() etc.
+ * HAS_DIRENT_H        - may be used "#include <dirent.h>" for opendir() etc.
+ * HAS_IO_H            - may be used "#include <io.h>"
+ * HAS_UNISTD_H        - may be used "#include <unistd.h>"
+ * HAS_PROCESS_H       - may be used "#include <process.h>"
+ * HAS_SHARE_H         - may be used "#include <share.h>" for sopen() etc.
+ * HAS_PWD_H           - may be used "#include <pwd.h>"
+ * HAS_GRP_H           - may be used "#include <grp.h>"
+ * HAS_UTIME_H         - may be used "#include <utime.h>"
+ * HAS_SYS_UTIME_H     - #include <sys/utime.h> in alternate to <utime.h>
+ * HAS_SYS_PARAM_H     - #include <sys/params.h>
+ * HAS_SYS_MOUNT_H     - #include <sys/mount.h>
+ * HAS_SYS_WAIT_H      - #include <sys/wait.h>
+ * HAS_SYS_STATVFS_H   - #include <sys/statvfs.h>
+ * HAS_SYS_VFS_H       - #include <sys/vfs.h>
+ * HAS_SYS_SYSEXITS_H  - #include <sys/sysexits.h>
+ * HAS_SYSEXITS_H      - #include <sysexits.h>
+ *
+ * USE_SYSTEM_COPY     - OS have system call for files copiing (see
+ *                       copy_file() and move_file() functions)
+ * USE_SYSTEM_COPY_WIN32  - Windows 9x/NT system copy routine
+ * USE_SYSTEM_COPY_OS2    - OS/2 system copy routine
+ * USE_STAT_MACROS     - may use stat() macro and non-POSIX (important!)
+ *                       S_ISREG and S_ISDIR macros. (See fexist.c)
+ *
+ *
+ ***************************************************************************
+ * Functions "my*" & etc
+ *
+ * mysleep(x)         - wait x seconds
+ * mymkdir(d)         - make directory
+ * strcasecmp(s1,s2)  - case-incencitive strings comparition, declare if
+ *                      present with other name or include header-file
+ * stricmp(s1,s2)     - also as above
+ * strncasecmp(s1,s2) - case-incencitive strings comparition not more n chars,
+ *                      declare if present with other name or include header
+ * strnicmp(s1,s2)    - also as above
+ *
+ * farread(a,b,c)     - for flat memory models declare as read(a,b,c)
+ * farwrite(a,b,c)    - for flat memory models declare as write(a,b,c)
+ * NEED_trivial_farread  - macro-flag: need use my own trivial_farread()
+ *                         instead farread() (implemented in structrw.c)
+ * NEED_trivial_farwrite - macro-flag: need use my own trivial_farwrite()
+ *                         instead farwrite() (implemented in structrw.c)
+ * MAXPATHLEN         - max path len value for disk i/o functions
+ *
+ ***************************************************************************
+ * Memory and platforms
+ *
+ * __BIG_ENDIAN__    - big endian bytes order in memory
+ * __LITTLE_ENDIAN__ - little endian bytes order in memory (like Intel x86)
+ *
+ * 16bit Intel x86 memory models (compiler-predefined)
+ * __TINY__    - 64K data, 64K code, stack in code or data
+ * __SMALL__   - 64K data, 64K code, stack apart
+ * __MEDIUM__  - 64K data, 1M (640K+HMB+UMB) code, stack apart
+ * __COMPACT__ - 1M data, 64K code, stack apart
+ * __LARGE__   - 1M data, 1M code, stack apart
+ * __HUGE__    - similar to the __LARGE__ except for two additional features:
+ *               Its segment is normalized during pointer arithmetic so that
+ *               pointer comparisons are accurate. And, huge pointers can be
+ *               incremented without suffering from segment wrap around.
+ * __NEARCODE__ - 64K code
+ * __FARCODE__  - 1M code
+ * __NEARDATA__ - 64K data
+ * __FARDATA__  - 1M data
+ *
+ * __FLAT__  - must be declared for any flat memory model, usualy all
+ *             not 16 bit dos, os/2 and windows; predefined for some compilers
+ *             - 64K data
+ *
+ ***************************************************************************
+ * Platforms & OS (binary targets)
+ *
+ * __NT__    - Windows NT/2000/XP target
+ * __WIN32__ - Windows 95/98/Me/NT/2000/XP target
+ * __OS2__   - OS/2 target (32 bit or 16 bit), 32bit is __OS2__ && __FLAT__
+ * __DOS__   - MS/PC/... DOS target (32 bit or 16 bit), 32bit is __DOS__ && __FLAT__
+ * __DOS16__ - MS/PC/... DOS target 16 bit
+ * __DPMI__  - DOS 32 bit (extenders: dos4g, farcall, rsx, ...)
+ * __MACOS__ - MacOS (Unix clone)
+ * __UNIX__  - All unix-like OS
+ * __BSD__   - BSD UNIX clones (BSDI, BSD/OS, FreeBSD, NetBSD, OpenBSD & etc)
+ * __LINUX__ - GNU/Linux (unix clone)
+ * __AMIGA__ - AmigaOS
+ * __ALPHA__ - The Alpha CPU
+ * __X86__   - Intel's x86 series CPU
+ * __PPC__   - The PowerPC CPU
+ * __MPPC__  - The PowerPC CPU on Apple Macintosh
+ *
+ *--------------------------------------------------------------------------
+ * CPU
+ *
+ * __186__   - Intel 80186 CPU
+ * __286__   - Intel 80286 CPU
+ * __386__   - Intel 80386 CPU
+ * __486__   - Intel 80486 CPU
+ * __586__   - Intel Pentium CPU
+ * __686__   - Intel Pentium Pro CPU
+ * __786__   - Intel Pentium II CPU
+ *
  */
-
-  /*
-   * Please define this compiler-specific stuff for each new compiler:
-   *
-   * _stdc    - Standard calling sequence.  This should be the type of function
-   *            required for function pointers for qsort() et al.
-   *
-   * _fast    - Fastest calling sequence supported.  If the default calling
-   *            sequence is the fastest, or if your compiler only has one,
-   *            define this to nothing.
-   *
-   * _intr    - For defining interrupt functions.  For some idiotic reason,
-   *            MSC requires that interrupt routines be declared
-   *            as "cdecl interrupt", instead of just "interrupt".
-   *
-   * _intcast - interrupt cast modifyer
-   *
-   * _veccast - vector cast modifyer
-   *
-   * far      - use pointer with any segment part, actually for x86 16 bit only
-   *            and in other cases must be set to empty value
-   *
-   * near     - (used for x86 16 bit only) use one-segment pointer
-   *
-   * pascal   - pascal style calling conversion code modifyer
-   *
-   * cdecl    - C declarations modifyer (alternate to pascal usually)
-   *            Declare if compiler don't support this.
-   *
-   * _loadds  - (used for x86 16 bit only) 'load data segment' code modifyer
-   *
-   * SMAPI_EXT - external variables & external functions call modifier
-   *             (usualy 'extern' for static linkage)
-   *
-   * _XPENTRY  - system procedures calling (conversion) modifyer
-   *             ("pascal", "_system" & etc)
-   *
-   *
-   *======================
-   * HAS_* please set to 1 for usage: #if HAS_...
-   *======================
-   * HAS_snprintf        - snprintf() presents
-   * HAS_asprintf        - asprintf() presents
-   * HAS_asnprintf       - asnprintf() presents
-   * HAS_vasprintf       - vasprintf() presents
-   * HAS_vsnprintf       - vsnprintf() presents
-   * HAS_spawnvp         - spawnwp() presents
-   * HAS_getpid          - getpid() presents
-   * HAS_mktime          - mktime() presents or defined here
-   * HAS_strftime        - strftime() presents
-   * HAS_sopen           - sopen() presents
-   * HAS_sleep           - sleep() presents or defined here
-   * HAS_dos_read        - dos_read() presents or defined here
-   * HAS_popen_close     - popen(); pclose() ("pipe open" and "pipe close")
-   * HAS_strupr         - strupr() presents
-   * HAS_strcasecmp      - strcasecmp()   usualy in <string.h>
-   * HAS_strncasecmp     - strncasecmp()  usualy in <string.h>
-   * HAS_stricmp         - stricmp()   eq strcasecmp()
-   * HAS_strnicmp        - strnicmp()  eq strncasecmp()
-   * HAS_strlwr          - strlwr()   lower string (string.h)
-   * HAS_strupr          - strupr()   upper string (string.h)
-   *
-   * HAS_MALLOC_H        - may be used "#include <malloc.h>" for malloc() etc.
-   * HAS_DOS_H           - may be used "#include <dos.h>"
-   * HAS_DPMI_H          - may be used "#include <dpmi.h>"
-   * HAS_DIR_H           - may be used "#include <dir.h>" for findfirst() etc.
-   * HAS_DIRENT_H        - may be used "#include <dirent.h>" for opendir() etc.
-   * HAS_IO_H            - may be used "#include <io.h>"
-   * HAS_UNISTD_H        - may be used "#include <unistd.h>"
-   * HAS_PROCESS_H       - may be used "#include <process.h>"
-   * HAS_SHARE_H         - may be used "#include <share.h>" for sopen() etc.
-   * HAS_PWD_H           - may be used "#include <pwd.h>"
-   * HAS_GRP_H           - may be used "#include <grp.h>"
-   * HAS_UTIME_H         - may be used "#include <utime.h>"
-   * HAS_SYS_UTIME_H     - #include <sys/utime.h> in alternate to <utime.h>
-   * HAS_SYS_PARAM_H     - #include <sys/params.h>
-   * HAS_SYS_MOUNT_H     - #include <sys/mount.h>
-   * HAS_SYS_WAIT_H      - #include <sys/wait.h>
-   * HAS_SYS_STATVFS_H   - #include <sys/statvfs.h>
-   * HAS_SYS_VFS_H       - #include <sys/vfs.h>
-   * HAS_SYS_SYSEXITS_H  - #include <sys/sysexits.h>
-   * HAS_SYSEXITS_H      - #include <sysexits.h>
-   *
-   * USE_SYSTEM_COPY     - OS have system call for files copiing (see
-   *                       copy_file() and move_file() functions)
-   * USE_SYSTEM_COPY_WIN32  - Windows 9x/NT system copy routine
-   * USE_SYSTEM_COPY_OS2    - OS/2 system copy routine
-   * USE_STAT_MACROS     - may use stat() macro and non-POSIX (important!)
-   *                       S_ISREG and S_ISDIR macros. (See fexist.c)
-   *
-   *
-   ***************************************************************************
-   * Functions "my*" & etc
-   *
-   * mysleep(x)         - wait x seconds
-   * mymkdir(d)         - make directory
-   * strcasecmp(s1,s2)  - case-incencitive strings comparition, declare if
-   *                      present with other name or include header-file
-   * stricmp(s1,s2)     - also as above
-   * strncasecmp(s1,s2) - case-incencitive strings comparition not more n chars,
-   *                      declare if present with other name or include header
-   * strnicmp(s1,s2)    - also as above
-   *
-   * farread(a,b,c)     - for flat memory models declare as read(a,b,c)
-   * farwrite(a,b,c)    - for flat memory models declare as write(a,b,c)
-   * NEED_trivial_farread  - macro-flag: need use my own trivial_farread()
-   *                         instead farread() (implemented in structrw.c)
-   * NEED_trivial_farwrite - macro-flag: need use my own trivial_farwrite()
-   *                         instead farwrite() (implemented in structrw.c)
-   * MAXPATHLEN         - max path len value for disk i/o functions
-   *
-   ***************************************************************************
-   * Memory and platforms
-   *
-   * __BIG_ENDIAN__    - big endian bytes order in memory
-   * __LITTLE_ENDIAN__ - little endian bytes order in memory (like Intel x86)
-   *
-   * 16bit Intel x86 memory models (compiler-predefined)
-   * __TINY__    - 64K data, 64K code, stack in code or data
-   * __SMALL__   - 64K data, 64K code, stack apart
-   * __MEDIUM__  - 64K data, 1M (640K+HMB+UMB) code, stack apart
-   * __COMPACT__ - 1M data, 64K code, stack apart
-   * __LARGE__   - 1M data, 1M code, stack apart
-   * __HUGE__    - similar to the __LARGE__ except for two additional features:
-   *               Its segment is normalized during pointer arithmetic so that
-   *               pointer comparisons are accurate. And, huge pointers can be
-   *               incremented without suffering from segment wrap around.
-   * __NEARCODE__ - 64K code
-   * __FARCODE__  - 1M code
-   * __NEARDATA__ - 64K data
-   * __FARDATA__  - 1M data
-   *
-   * __FLAT__  - must be declared for any flat memory model, usualy all
-   *             not 16 bit dos, os/2 and windows; predefined for some compilers
-   *             - 64K data
-   *
-   ***************************************************************************
-   * Platforms & OS (binary targets)
-   *
-   * __NT__    - Windows NT/2000/XP target
-   * __WIN32__ - Windows 95/98/Me/NT/2000/XP target
-   * __OS2__   - OS/2 target (32 bit or 16 bit), 32bit is __OS2__ && __FLAT__
-   * __DOS__   - MS/PC/... DOS target (32 bit or 16 bit), 32bit is __DOS__ && __FLAT__
-   * __DOS16__ - MS/PC/... DOS target 16 bit
-   * __DPMI__  - DOS 32 bit (extenders: dos4g, farcall, rsx, ...)
-   * __MACOS__ - MacOS (Unix clone)
-   * __UNIX__  - All unix-like OS
-   * __BSD__   - BSD UNIX clones (BSDI, BSD/OS, FreeBSD, NetBSD, OpenBSD & etc)
-   * __LINUX__ - GNU/Linux (unix clone)
-   * __AMIGA__ - AmigaOS
-   * __ALPHA__ - The Alpha CPU
-   * __X86__   - Intel's x86 series CPU
-   * __PPC__   - The PowerPC CPU
-   * __MPPC__  - The PowerPC CPU on Apple Macintosh
-   *
-   *--------------------------------------------------------------------------
-   * CPU
-   *
-   * __186__   - Intel 80186 CPU
-   * __286__   - Intel 80286 CPU
-   * __386__   - Intel 80386 CPU
-   * __486__   - Intel 80486 CPU
-   * __586__   - Intel Pentium CPU
-   * __686__   - Intel Pentium Pro CPU
-   * __786__   - Intel Pentium II CPU
-   *
-   */
 
 /**************************************************************************
  * For informaion: list of predefined macroses for known compilers.       *
@@ -437,10 +437,10 @@ int qq(void)
 */
 
 #if defined(__GNUC__)
-  #if (__GNUC__==2) && (__GNUC_MINOR__>95)   /* don't place in one line for prevent old compilers warnings */
-    #warning Latest GNU C branch 2 is 2.95.*. Your version is not GNU C and not supported. You may use it for your risk.
-    #warning Download and install GNU C release from www.gnu.org only, please.
-  #endif
+#if (__GNUC__==2) && (__GNUC_MINOR__>95)   /* don't place in one line for prevent old compilers warnings */
+#warning Latest GNU C branch 2 is 2.95.*. Your version is not GNU C and not supported. You may use it for your risk.
+#warning Download and install GNU C release from www.gnu.org only, please.
+#endif
 #endif
 
 /**** Compiler defines ****/
@@ -495,7 +495,7 @@ int qq(void)
 #    endif
 #  endif
 #  if (_MSC_VER < 1200)
-   /* Microsoft C or Microsoft QuickC for MS-DOS or OS/2 */
+/* Microsoft C or Microsoft QuickC for MS-DOS or OS/2 */
 #    define __MSC__
 #    ifdef __OS2__
 #      ifndef __MSC__OS2__
@@ -958,9 +958,9 @@ int qq(void)
 #    undef __HUGE__
 #  endif
 
-  /*
-   *  Code is really "near"
-   */
+/*
+ *  Code is really "near"
+ */
 
 #  undef __FARCODE__
 #  undef __FARDATA__
@@ -1157,8 +1157,8 @@ int qq(void)
 #  define HAS_DIRECT_H     /* #include <direct.h> */
 #  define HAS_PROCESS_H   /* may use "#include <process.h> */
 
-   SMAPI_EXT int unlock(int handle, long ofs, long length);
-   SMAPI_EXT int lock(int handle, long ofs, long length);
+SMAPI_EXT int unlock ( int handle, long ofs, long length );
+SMAPI_EXT int lock ( int handle, long ofs, long length );
 
 
 /* End: MS Visual C/C++ ******************************************************/
@@ -1187,14 +1187,14 @@ int qq(void)
 #  if _MSC_VER >= 600
 #    define farcalloc(a,b) _fcalloc(a,b)
 #  else
-     void far *farcalloc(int n, int m);
+void far *farcalloc ( int n, int m );
 #  endif
 
-  int unlock(int handle, long ofs, long length);
-  int lock(int handle, long ofs, long length);
+int unlock ( int handle, long ofs, long length );
+int lock ( int handle, long ofs, long length );
 
 #  ifdef __OS2__
-    /* just don't use 16 bit OS/2, we doubt that it still works */
+/* just don't use 16 bit OS/2, we doubt that it still works */
 #    define farread read
 #    define farwrite write
 #    define _XPENTRY pascal far
@@ -1278,8 +1278,8 @@ int qq(void)
 #      define farwrite   trivial_farwrite
 #      define NEED_trivial_farread   1
 #      define NEED_trivial_farwrite  1
-       int trivial_farread( int handle, void far *buffer, unsigned len );
-       int trivial_farwrite( int handle, void far *buffer, unsigned len );
+int trivial_farread ( int handle, void far *buffer, unsigned len );
+int trivial_farwrite ( int handle, void far *buffer, unsigned len );
 #    endif
 
 #    define HAS_dos_read 1      /* dos_read() */
@@ -1414,8 +1414,8 @@ int qq(void)
 /*#  define strcasecmp  stricmp*/
 /*#  define strncasecmp strnicmp*/
 
-  int unlock(int handle, long ofs, long length);
-  int lock(int handle, long ofs, long length);
+int unlock ( int handle, long ofs, long length );
+int lock ( int handle, long ofs, long length );
 
 /* older mingw headers are too lazy ... */
 #  include <share.h>
@@ -1474,8 +1474,8 @@ int qq(void)
 
 #  define mymkdir(a) mkdir((a), 0)
 
-   int unlock(int handle, long ofs, long length);
-   int lock(int handle, long ofs, long length);
+int unlock ( int handle, long ofs, long length );
+int lock ( int handle, long ofs, long length );
 
 #  define strcasecmp stricmp
 #  define strncasecmp strnicmp
@@ -1585,7 +1585,7 @@ int qq(void)
 
 #  if defined(__TURBOC__DOS__)/* Turbo C/C++ & Borland C/C++ for MS-DOS */
 
-   /* for BC++ 3.1 */
+/* for BC++ 3.1 */
 #    define strcasecmp stricmp
 #    define strncasecmp strncmpi
 
@@ -1596,7 +1596,7 @@ int qq(void)
 #    define _fast _fastcall
 #    define _loadds
 
-     /* #include <conio.h> */
+/* #include <conio.h> */
 #    define mysleep(x) delay(x);
 #    define sleep(x) delay(x);
 #    define HAS_sleep     1
@@ -1607,9 +1607,9 @@ int qq(void)
 
 #    define mode_t int
 
-   /* Borland Turbo C/C++ for MS-DOS */
+/* Borland Turbo C/C++ for MS-DOS */
 #  elif defined(__TURBOC__WIN32__)
-   /* Borland C/C++ for Win32 */
+/* Borland C/C++ for Win32 */
 
 #    define _stdc cdecl
 #    define _intr
@@ -1629,9 +1629,9 @@ int qq(void)
 #    define strcasecmp stricmp
 #    define strncasecmp strncmpi
 
-   /* End: Borland C/C++ for Win32 */
+/* End: Borland C/C++ for Win32 */
 #  elif defined(__TURBOC__OS2__)
-   /* Borland C/C++ for OS/2 */
+/* Borland C/C++ for OS/2 */
 
 #    define _stdc cdecl
 #    define _intr
@@ -1717,9 +1717,9 @@ int qq(void)
 
 #  define mymkdir(a) mkdir((a), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
 
-   int lock(int handle, long ofs, long length);   /* in locking.c */
-   int unlock(int handle, long ofs, long length);
-   int sopen(const char *name, int oflag, int ishared, int mode);
+int lock ( int handle, long ofs, long length ); /* in locking.c */
+int unlock ( int handle, long ofs, long length );
+int sopen ( const char *name, int oflag, int ishared, int mode );
 
 #  define tell(a) lseek((a),0,SEEK_CUR)
 
@@ -1790,9 +1790,9 @@ int qq(void)
 #    define mymkdir(a) __mkdir((a), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
 #  endif
 
-  int lock(int handle, long ofs, long length);   /* in locking.c */
-  int unlock(int handle, long ofs, long length);
-  int sopen(const char *name, int oflag, int ishared, int mode);
+int lock ( int handle, long ofs, long length ); /* in locking.c */
+int unlock ( int handle, long ofs, long length );
+int sopen ( const char *name, int oflag, int ishared, int mode );
 
 #  ifndef __SUN__
 #    define tell(a) lseek((a),0,SEEK_CUR)
@@ -1810,11 +1810,11 @@ int qq(void)
 #  endif
 
 #  if (defined(BSD) && (BSD >= 199103))
-    /* now we can be sure we are on BSD 4.4 */
+/* now we can be sure we are on BSD 4.4 */
 #  define HAS_SYS_MOUNT_H
 #  endif
-    /* we are not on any BSD-like OS */
-    /* list other UNIX os'es without getfree mechanism here */
+/* we are not on any BSD-like OS */
+/* list other UNIX os'es without getfree mechanism here */
 #  if defined( __svr4__ ) || defined( __SVR4 ) || defined (__linux__) && defined (__GLIBC__)
 #  define HAS_SYS_STATVFS_H
 #  endif
@@ -1855,7 +1855,7 @@ int qq(void)
 #    define HAS_sleep     1
 #  endif
 #  ifndef __SUN__ /* SunOs 2.7 not have snprintf() and vsnprintf in libc */
-                  /* If you known test for this - please report to developers */
+/* If you known test for this - please report to developers */
 #    define HAS_snprintf  1
 #    define HAS_vsnprintf 1
 #  endif
@@ -1932,37 +1932,37 @@ int qq(void)
 
 #if defined(__FLAT__)      /* 32 bit or 64 bit  = moved from smapi/prog.h */
 
-  #define farcalloc  calloc
-  #define farmalloc  malloc
-  #define farrealloc realloc
-  #define farfree    free
-  #define _fmalloc   malloc
+#define farcalloc  calloc
+#define farmalloc  malloc
+#define farrealloc realloc
+#define farfree    free
+#define _fmalloc   malloc
 
 #elif defined(__FARDATA__)  /* 16 bit (possible obsolete?) - moved from smapi/prog.h */
 
-  #define malloc(n)     farmalloc(n)
-  #define calloc(n,u)   farcalloc(n,u)
-  #define free(p)       farfree(p)
-  #define realloc(p,n)  farrealloc(p,n)
+#define malloc(n)     farmalloc(n)
+#define calloc(n,u)   farcalloc(n,u)
+#define free(p)       farfree(p)
+#define realloc(p,n)  farrealloc(p,n)
 
 #endif /* defined(__FARDATA__) */
 
 /* Default separator for path specification */
 
 #ifndef PATH_DELIM   /* moved from smapi/prog.h */
- #if defined(__UNIX__) || defined(__AMIGA__)
-  #define PATH_DELIM  '/'
- #else
-  #define PATH_DELIM  '\\'
- #endif
+#if defined(__UNIX__) || defined(__AMIGA__)
+#define PATH_DELIM  '/'
+#else
+#define PATH_DELIM  '\\'
+#endif
 #endif
 
 #ifndef PATHLEN
- #ifdef MAXPATHLEN
-  #define PATHLEN   MAXPATHLEN
- #else                    /* moved from smapi/prog.h */ /* OS-depended vallue! */
-  #define PATHLEN   120   /* Max. length of path */
- #endif
+#ifdef MAXPATHLEN
+#define PATHLEN   MAXPATHLEN
+#else                    /* moved from smapi/prog.h */ /* OS-depended vallue! */
+#define PATHLEN   120   /* Max. length of path */
+#endif
 #endif
 
 
@@ -2057,12 +2057,12 @@ int qq(void)
 #   error Please check your compiler to far calling implementation of write() function and define farwrite in compiler.h
 #endif
 
- /* waitlock works like lock, but blocks until the lock can be
-  * performed.
-  * waitlock2 works like a timed waitlock.
-  */
-extern int waitlock(int, long, long);
-extern int waitlock2(int, long, long, long);
+/* waitlock works like lock, but blocks until the lock can be
+ * performed.
+ * waitlock2 works like a timed waitlock.
+ */
+extern int waitlock ( int, long, long );
+extern int waitlock2 ( int, long, long, long );
 
 #if !defined(HAS_mktime)
 
@@ -2078,14 +2078,14 @@ time_t _stdc mktime(struct tm *tm_ptr);
 #if !defined(HAS_strftime)
 
 #define strftime(str,max,fmt,tm) strftim(str,max,fmt,tm)
-size_t _stdc strftim( char *str, size_t maxsize, const char *fmt,
-                      const struct tm *tm_ptr );
+size_t _stdc strftim ( char *str, size_t maxsize, const char *fmt,
+                       const struct tm *tm_ptr );
 
 #endif
 
 
 #if !defined(HAS_strupr)
-char *strupr(char *str);
+char *strupr ( char *str );
 #endif
 
 /* Some implementations not include the min() macro or function. Usually C++ */
@@ -2104,10 +2104,10 @@ char *strupr(char *str);
 #endif
 
 #ifdef NEED_trivial_farread
-  int trivial_farread( int handle, void far *buffer, unsigned len );
+int trivial_farread ( int handle, void far *buffer, unsigned len );
 #endif
 #ifdef NEED_trivial_farwrite
-  int trivial_farwrite( int handle, void far *buffer, unsigned len );
+int trivial_farwrite ( int handle, void far *buffer, unsigned len );
 #endif
 
 

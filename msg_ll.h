@@ -5,23 +5,25 @@
 #include "struct.h"
 
 
-typedef struct msg_ll {
+typedef struct msg_ll
+{
 
     PASSING *pass;
-    
+
     // Link List for Holding Each Line
-    typedef struct LineRec {
+    typedef struct LineRec
+    {
 
         std::string  data;
-        LineRec     *up_link;    
+        LineRec     *up_link;
         LineRec     *dn_link;
-    
-    }LineRec;
-    
+
+    } LineRec;
+
     // Main List for Holding All Data
-    LineRec *head; 
+    LineRec *head;
     LineRec *current_node;
-    
+
     int Row;
     int Top;
     int Bot;
@@ -32,10 +34,10 @@ typedef struct msg_ll {
     int TotPages;
 
     msg_ll::msg_ll();
-    void start(PASSING *passing);
-    void display_list(void);
+    void start ( PASSING *passing );
+    void display_list ( void );
     void delete_line_up();
-    void add_to_list(std::string add_data);
+    void add_to_list ( std::string add_data );
     bool move_up();
     bool move_down();
     int  line_count();
@@ -46,7 +48,7 @@ typedef struct msg_ll {
     void box_pgdn();
     void box_pgup();
 
-}msg_ll;
+} msg_ll;
 
 
 #endif

@@ -24,65 +24,71 @@ using namespace std;
 // Class Constructor
 //----------------------------------------------------------------------------
 
-menu_func::menu_func() {
+menu_func::menu_func()
+{
 
     _loadnew = false;
-    strcpy(_curmenu,"");
-    strcpy(_premenu,"");
+    strcpy ( _curmenu,"" );
+    strcpy ( _premenu,"" );
 
 }
 
 // Start BBS Menu System
 //----------------------------------------------------------------------------
-void menu_func::start(PASSING *passing, UserRec *user) {
+void menu_func::start ( PASSING *passing, UserRec *user )
+{
 
     pass = passing;
     usr  = user;
 }
 
-void menu_func::menu_readin() {
+void menu_func::menu_readin()
+{
 
-    printf("\nReadin() Menu: %s",_curmenu);
-    memset(&menur2,0,sizeof(MenuRec));
+    printf ( "\nReadin() Menu: %s",_curmenu );
+    memset ( &menur2,0,sizeof ( MenuRec ) );
 
     // Read in Menu
     int idx;
-    idx = _mnu.menu_find(_curmenu);
-    _mnu.menu_read(&menur2,idx);
+    idx = _mnu.menu_find ( _curmenu );
+    _mnu.menu_read ( &menur2,idx );
 
     //Count Commands
     int nogc;
-    noc = _mnu.cmds_count(_curmenu);
+    noc = _mnu.cmds_count ( _curmenu );
 
     // If Global Menu True, Then allocate space for these commands as well
-    if (menur2.MFlags.UseGlobal) {
-        nogc = _mnu.cmds_count("global");
+    if ( menur2.MFlags.UseGlobal )
+    {
+        nogc = _mnu.cmds_count ( "global" );
     }
     else nogc = 0;
     noc += nogc;
 
     // Allocate Comands
-    memset(&cmdr2,0,sizeof(CommandRec[MAX_MENU_COMMANDS]));
+    memset ( &cmdr2,0,sizeof ( CommandRec[MAX_MENU_COMMANDS] ) );
 
     // Load Commands
     idx = 0;
-    while(_mnu.cmds_read(_curmenu,&cmdr2[noc++],idx++));
+    while ( _mnu.cmds_read ( _curmenu,&cmdr2[noc++],idx++ ) );
 
     // Now Load Global Commands, if not 0
-    if (menur2.MFlags.UseGlobal && nogc != 0) {
+    if ( menur2.MFlags.UseGlobal && nogc != 0 )
+    {
         idx = 0;
-        while(_mnu.cmds_read("global",&cmdr2[noc++],idx++));
+        while ( _mnu.cmds_read ( "global",&cmdr2[noc++],idx++ ) );
     }
 
-     // Reset Load New Menu Flag
+    // Reset Load New Menu Flag
     _loadnew = false;
 }
 
 
 
-void ScrollingText(void *p) {
+void ScrollingText ( void *p )
+{
 
-    PASSING *pass = (PASSING*) p;
+    PASSING *pass = ( PASSING* ) p;
 
     short xpos = 0;
     short ypos = 0;
@@ -100,7 +106,8 @@ void ScrollingText(void *p) {
 
 
     // Test for End of Thread
-    if (pass->session->ScrollBreak) {
+    if ( pass->session->ScrollBreak )
+    {
         _endthread();
         return;
     }
@@ -112,54 +119,59 @@ void ScrollingText(void *p) {
     q2 = "";
 
     boxlen = pass->cmdr2->STLen;
-    if (boxlen-1 > strlen(pass->cmdr2->MString)) {
-        for (int i = 0; i != boxlen; i++) quotestr += " ";
+    if ( boxlen-1 > strlen ( pass->cmdr2->MString ) )
+    {
+        for ( int i = 0; i != boxlen; i++ ) quotestr += " ";
     }
 
-    xpos = pass->cmdr2->Xcoord; ypos = pass->cmdr2->Ycoord;
-    strcpy(midcolor,  pass->cmdr2->HiString);
-    strcpy(sidecolor, pass->cmdr2->LoString);
+    xpos = pass->cmdr2->Xcoord;
+    ypos = pass->cmdr2->Ycoord;
+    strcpy ( midcolor,  pass->cmdr2->HiString );
+    strcpy ( sidecolor, pass->cmdr2->LoString );
     quotestr += pass->cmdr2->MString;
     loop2 = quotestr.size();
     quotestr += quotestr.substr ( 0, boxlen-1 );
 
 
     // Loop Scrolling Text Here
-    while (pass->session->isActive()) {
+    while ( pass->session->isActive() )
+    {
 
         // Test for End of Thread
-        if (pass->session->ScrollBreak) {
+        if ( pass->session->ScrollBreak )
+        {
             break;
         }
 
         // Now Write Scrolling Menu Command Text
         output = "";
-        sprintf(outBuff, "\x1b[%i;%iH",ypos,xpos);
+        sprintf ( outBuff, "\x1b[%i;%iH",ypos,xpos );
         output += outBuff;
-        if (loop > loop2) loop = 0;
+        if ( loop > loop2 ) loop = 0;
         output += sidecolor;
         q2 = quotestr.substr ( loop, 2 );
         output += q2;
         output += midcolor;
-        q2 = quotestr.substr ( loop + 2, (boxlen - 4) );
+        q2 = quotestr.substr ( loop + 2, ( boxlen - 4 ) );
         output += q2;
         output += sidecolor;
-        q2 = quotestr.substr ( loop + (boxlen - 2), 2 );
+        q2 = quotestr.substr ( loop + ( boxlen - 2 ), 2 );
         output += q2;
         ++loop;
 
-        pipe2ansi(pass,(char*)output.c_str());
+        pipe2ansi ( pass, ( char* ) output.c_str() );
 
         // Give small delay to Slow Text Scrolling Down
-        Sleep(100);
+        Sleep ( 100 );
 
-   }
-   _endthread();
+    }
+    _endthread();
 }
 
 
 // Later Change this to return Command # on Enter or Hotkey
-void menu_func::menu_bars(char *inPut) {
+void menu_func::menu_bars ( char *inPut )
+{
 
     // Menu Lightbar Variables
     short xx      = 1;        // Holds X Coord
@@ -168,8 +180,8 @@ void menu_func::menu_bars(char *inPut) {
     short iNoc    = 0;        // Holds Lightbar # of choices
     short sNoc    = 0;        // Holds Scroll Text # of choices
     short choice  = 0;        // Holds Currect Lightbar #
-    short execnum[200]={0};   // Holds commands which are Lightbars
-    short execnum2[10]={0};   // Holds commands which are Scroll Text
+    short execnum[200]= {0};  // Holds commands which are Lightbars
+    short execnum2[10]= {0};  // Holds commands which are Scroll Text
 
     unsigned char c,cc;       // Hold Input / Lightbar Key
 
@@ -181,120 +193,144 @@ void menu_func::menu_bars(char *inPut) {
     short sRand = 0;          // Randmise Text Scrollies
 
     // Display Menu Ansi for Lightber Menu, Except Message and File Lightbar Prompts
-    ansiPrintf(pass, menur2.Directive);
+    ansiPrintf ( pass, menur2.Directive );
     execnum2[0] = '\0';
 
     HANDLE ahThread;
 
-    while (pass->session->isActive()) {
+    while ( pass->session->isActive() )
+    {
 
         // Count Cmds with lightbar flag only
-        for (int i = 0; i != noc; i++) {
+        for ( int i = 0; i != noc; i++ )
+        {
             // Get Ligthbar Commands
-            if (cmdr2[i].LBarCmd) {
+            if ( cmdr2[i].LBarCmd )
+            {
                 execnum[iNoc] = i;
                 ++iNoc;
             }
             // Get Text Scrolling Commands
-            else if (cmdr2[i].SText) {
+            else if ( cmdr2[i].SText )
+            {
                 execnum2[sNoc] = i;
                 ++sNoc;
             }
         }
 
         // If no Menu Commands Return!
-        if (iNoc == 0) return;
+        if ( iNoc == 0 ) return;
 
 
         // Make sure there is more then 1 to Randomize
-        if (sNoc > 0) {
+        if ( sNoc > 0 )
+        {
             // Randomize Scroll Text
-            srand( time(NULL) );
-            sRand = rand()%sNoc;
+            srand ( time ( NULL ) );
+            sRand = rand() %sNoc;
         }
 
         // Start Text Scrolling Thread here...
-        if (execnum2[0] != '\0') {
+        if ( execnum2[0] != '\0' )
+        {
             pass->cmdr2 = &cmdr2[execnum2[sRand]];
             pass->session->ScrollBreak = false;
-            ahThread = (HANDLE)_beginthread( ScrollingText, 0, pass);
-            printf("\nStarting Scrolling Text Thread");
+            ahThread = ( HANDLE ) _beginthread ( ScrollingText, 0, pass );
+            printf ( "\nStarting Scrolling Text Thread" );
         }
 
 
         // Setup of first Command, Highlited
         output = "";
-        xx = cmdr2[execnum[0]].Xcoord; yy = cmdr2[execnum[0]].Ycoord;
-        sprintf(outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[0]].HiString);
+        xx = cmdr2[execnum[0]].Xcoord;
+        yy = cmdr2[execnum[0]].Ycoord;
+        sprintf ( outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[0]].HiString );
         output += outBuff;
 
         // Setup of Remaining Lightbars in Low Form
-        for (int rep = 1; rep != iNoc; rep++) {
-            xx = cmdr2[execnum[rep]].Xcoord; yy = cmdr2[execnum[rep]].Ycoord;
-            sprintf(outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[rep]].LoString);
+        for ( int rep = 1; rep != iNoc; rep++ )
+        {
+            xx = cmdr2[execnum[rep]].Xcoord;
+            yy = cmdr2[execnum[rep]].Ycoord;
+            sprintf ( outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[rep]].LoString );
             output += outBuff;
         }
 
         // Write out all the Lightbars
         output += "\x1b[25;80H";
-        pipe2ansi(pass,(char*)output.c_str());
+        pipe2ansi ( pass, ( char* ) output.c_str() );
 
         // Handle Lightbar Movement, if Enter, return with cmdkey, data string
-        while (pass->session->isActive()) {
+        while ( pass->session->isActive() )
+        {
             result = false; // Reset to False
-            while (pass->session->isActive()) {
+            while ( pass->session->isActive() )
+            {
 
                 // Get Lightbar Input
-                result = pass->session->pollc(c);
+                result = pass->session->pollc ( c );
 
                 // Check here if Arrow or Escaped Input was Received
-                if ((int)c == 27) { c = pass->session->EscapeKey[2]; EscHit = true; }
+                if ( ( int ) c == 27 )
+                {
+                    c = pass->session->EscapeKey[2];
+                    EscHit = true;
+                }
                 else EscHit = false;
 
                 // Input Received Break Loop and Redisplay Lightbars
-                if (result) break;
-                Sleep(10);
+                if ( result ) break;
+                Sleep ( 10 );
 
             }
 
             output = "";
-            if (EscHit) { // Input Key is Escaped Meaning Arrow Keys
+            if ( EscHit ) // Input Key is Escaped Meaning Arrow Keys
+            {
 
                 // Skip Moving Lightbars with Up/Dn Keys if were in Message Prompt
-                if ((strcmp(_curmenu,"msgp") != 0) && (strcmp(_curmenu,"msgp2") != 0)) {
-                    if (c == 'A') c = 'D';
-                    else if (c == 'B') c = 'C';
+                if ( ( strcmp ( _curmenu,"msgp" ) != 0 ) && ( strcmp ( _curmenu,"msgp2" ) != 0 ) )
+                {
+                    if ( c == 'A' ) c = 'D';
+                    else if ( c == 'B' ) c = 'C';
                 }
 
-                if (c == 'D' ) {  // Up & Left
-                    xx = cmdr2[execnum[choice]].Xcoord; yy = cmdr2[execnum[choice]].Ycoord;
-                    sprintf(outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[choice]].LoString);
+                if ( c == 'D' )   // Up & Left
+                {
+                    xx = cmdr2[execnum[choice]].Xcoord;
+                    yy = cmdr2[execnum[choice]].Ycoord;
+                    sprintf ( outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[choice]].LoString );
                     output += outBuff;
 
-                    if (choice == 0) choice = iNoc-1;
+                    if ( choice == 0 ) choice = iNoc-1;
                     else --choice;
 
-                    xx = cmdr2[execnum[choice]].Xcoord; yy = cmdr2[execnum[choice]].Ycoord;
-                    sprintf(outBuff,"\x1b[%i;%iH%s\x1b[25;80H",yy,xx,cmdr2[execnum[choice]].HiString);
+                    xx = cmdr2[execnum[choice]].Xcoord;
+                    yy = cmdr2[execnum[choice]].Ycoord;
+                    sprintf ( outBuff,"\x1b[%i;%iH%s\x1b[25;80H",yy,xx,cmdr2[execnum[choice]].HiString );
                     output += outBuff;
                     // Send Lightbar output
-                    pipe2ansi(pass,(char*)output.c_str());
+                    pipe2ansi ( pass, ( char* ) output.c_str() );
                 }
-                else if (c == 'C') { // Down & Right
-                    xx = cmdr2[execnum[choice]].Xcoord; yy = cmdr2[execnum[choice]].Ycoord;
-                    sprintf(outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[choice]].LoString);
+                else if ( c == 'C' ) // Down & Right
+                {
+                    xx = cmdr2[execnum[choice]].Xcoord;
+                    yy = cmdr2[execnum[choice]].Ycoord;
+                    sprintf ( outBuff,"\x1b[%i;%iH%s",yy,xx,cmdr2[execnum[choice]].LoString );
                     output += outBuff;
 
-                    if (choice == iNoc-1) choice = 0;
+                    if ( choice == iNoc-1 ) choice = 0;
                     else ++choice;
 
-                    xx = cmdr2[execnum[choice]].Xcoord; yy = cmdr2[execnum[choice]].Ycoord;
-                    sprintf(outBuff,"\x1b[%i;%iH%s\x1b[25;80H",yy,xx,cmdr2[execnum[choice]].HiString);
+                    xx = cmdr2[execnum[choice]].Xcoord;
+                    yy = cmdr2[execnum[choice]].Ycoord;
+                    sprintf ( outBuff,"\x1b[%i;%iH%s\x1b[25;80H",yy,xx,cmdr2[execnum[choice]].HiString );
                     output += outBuff;
                     // Send Lightbar output
-                    pipe2ansi(pass,(char*)output.c_str());
+                    pipe2ansi ( pass, ( char* ) output.c_str() );
                 }
-                else {
+                else
+                {
 
                     // Pass through Key and Return it
                     inPut[0] = c;
@@ -304,15 +340,19 @@ void menu_func::menu_bars(char *inPut) {
 
             }
             // Normal Key Input
-            else {
+            else
+            {
                 // If Enter, Return Cmd # of Lightbar Executed
-                if (c == '\r') {
+                if ( c == '\r' )
+                {
                     pass->session->ScrollBreak = true;
                     // Here Loop through and execute stacked Commands
-                    for (int ckey = 0; ckey != noc; ckey++) {
-                        if (strcmp(cmdr2[ckey].CKeys, cmdr2[execnum[choice]].CKeys) == 0) {
-                            menu_docmd(cmdr2[ckey].CmdKeys,cmdr2[ckey].MString);
-                            strcpy(inPut,(const char*)cmdr2[ckey].CKeys);
+                    for ( int ckey = 0; ckey != noc; ckey++ )
+                    {
+                        if ( strcmp ( cmdr2[ckey].CKeys, cmdr2[execnum[choice]].CKeys ) == 0 )
+                        {
+                            menu_docmd ( cmdr2[ckey].CmdKeys,cmdr2[ckey].MString );
+                            strcpy ( inPut, ( const char* ) cmdr2[ckey].CKeys );
                         }
                     }
                     return;
@@ -326,21 +366,24 @@ void menu_func::menu_bars(char *inPut) {
 }
 
 
-void menu_func::menu_proc(char *mString) {
+void menu_func::menu_proc ( char *mString )
+{
 
 
     // Read through and do and Commands with FIRSTCMD/EVERYTIME
-    strcpy(mString,"");
+    strcpy ( mString,"" );
 
     // Process Commands as lightbars
-    if(menur2.Lightbar) {
-        if (noc != 0) menu_bars(mString);
+    if ( menur2.Lightbar )
+    {
+        if ( noc != 0 ) menu_bars ( mString );
     }
 
     // Do normal Menu Processing Here
 }
 
-void menu_func::logon_system(unsigned char c) {
+void menu_func::logon_system ( unsigned char c )
+{
 
     /*
     class logon *lgn = new logon;
@@ -366,9 +409,10 @@ void menu_func::logon_system(unsigned char c) {
     logon _lgn;
 
     // Pass Socket and User Rec to Logon
-    _lgn.start(pass,usr);
+    _lgn.start ( pass,usr );
 
-    switch (c) {
+    switch ( c )
+    {
         case 'L' :
             _lgn.login();
             break;
@@ -383,7 +427,8 @@ void menu_func::logon_system(unsigned char c) {
 
 }
 
-void menu_func::msgedit_system() {
+void menu_func::msgedit_system()
+{
 
     /*
     msg_edit *_medit = new msg_edit;
@@ -394,16 +439,17 @@ void menu_func::msgedit_system() {
 
     msg_edit _medit;
     // Startup Msg Base Editor
-    _medit.start(pass);
+    _medit.start ( pass );
     _medit.mbeditmenu();
     //delete _medit;
 
 }
 
-void menu_func::msgread_system(unsigned char c) {
+void menu_func::msgread_system ( unsigned char c )
+{
 
 
-    printf("\nMessage Reader Init");
+    printf ( "\nMessage Reader Init" );
 
     // Handle to Message Reader Class
     class msg_read  *_mread = new msg_read;
@@ -418,7 +464,7 @@ void menu_func::msgread_system(unsigned char c) {
     usr->Number     = 0;
     usr->linelen    = 80;
     usr->pagelen    = 25;
-    strcpy(usr->Handle, "mercyful fate");
+    strcpy ( usr->Handle, "mercyful fate" );
 
     //strcpy(_mf->_curmenu,"msgp");   // Setup Message Prompt Menu
     // Initalize Menu Function Class
@@ -431,7 +477,7 @@ void menu_func::msgread_system(unsigned char c) {
     int result = 0;
 
     // Startup Message Read Class
-    _mread->start(pass,usr);
+    _mread->start ( pass,usr );
     _mread->start_reading();
 
     /*
@@ -499,9 +545,10 @@ void menu_func::msgread_system(unsigned char c) {
 }
 
 
-void menu_func::msgpost_system(unsigned char c) {
+void menu_func::msgpost_system ( unsigned char c )
+{
 
-    printf("\nMessage FSE Init");
+    printf ( "\nMessage FSE Init" );
     char buff[2000000];
     /*
     // Handle to Message Reader Class
@@ -513,36 +560,39 @@ void menu_func::msgpost_system(unsigned char c) {
     delete _mpost; */
 
     msg_fse _mpost;
-    _mpost.start(pass);
+    _mpost.start ( pass );
     //_mpost.main_fse();
-    _mpost.poll_chr(buff);
+    _mpost.poll_chr ( buff );
 
-    printf("\n%s",buff);
+    printf ( "\n%s",buff );
 
 }
 
-void menu_func::menu_docmd(char *CmdKey, char *mString) {
+void menu_func::menu_docmd ( char *CmdKey, char *mString )
+{
 
     unsigned char c1 = CmdKey[0];
     unsigned char c2 = CmdKey[1];
 
     _loadnew = false;
 
-    switch (c1) {
+    switch ( c1 )
+    {
 
-        // Message Reader Return right away
+            // Message Reader Return right away
         case '!' :
             break;
 
-        // Matrix Menu Commands
+            // Matrix Menu Commands
         case '*' :
-            switch (c2) {
+            switch ( c2 )
+            {
                 case 'L' : // Login
-                    logon_system(c2);
+                    logon_system ( c2 );
                     break;
 
                 case 'A' : // Apply
-                    logon_system(c2);
+                    logon_system ( c2 );
                     break;
 
                 case 'G' : // Logoff
@@ -554,16 +604,17 @@ void menu_func::menu_docmd(char *CmdKey, char *mString) {
             }
             break;
 
-        // Message System Commands
+            // Message System Commands
         case 'M' :
-            switch (c2) {
+            switch ( c2 )
+            {
                 case 'R' : // Message Reader
-                    msgread_system(c2);
+                    msgread_system ( c2 );
                     _loadnew = true;
                     break;
 
                 case 'P' : // Mesasge FSE Post
-                    msgpost_system(c2);
+                    msgpost_system ( c2 );
                     break;
 
                 default  : // None Found!
@@ -571,11 +622,12 @@ void menu_func::menu_docmd(char *CmdKey, char *mString) {
             }
             break;
 
-        // Sysop Commands
+            // Sysop Commands
         case '%' :
-            switch (c2) {
+            switch ( c2 )
+            {
                 case '#' : // Menu Editor
-                    menu_edit(pass);
+                    menu_edit ( pass );
                     _loadnew = true;
                     break;
 
@@ -589,9 +641,10 @@ void menu_func::menu_docmd(char *CmdKey, char *mString) {
             break;
 
         case '-' :
-            switch (c2) {
+            switch ( c2 )
+            {
                 case '^' : // Change Menu
-                    strcpy(_curmenu,mString);
+                    strcpy ( _curmenu,mString );
                     _loadnew = true;
                     break;
 
@@ -600,7 +653,7 @@ void menu_func::menu_docmd(char *CmdKey, char *mString) {
             }
             break;
 
-        // None Found!
+            // None Found!
         default  :
             break;
     }

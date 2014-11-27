@@ -5,22 +5,23 @@
 #include "language.h"
 #include "users.h"
 
-class logon {
+class logon
+{
 
-    protected:    
-    PASSING      *pass; // Handle to Session I/O                    
-        
-    private:
+protected:
+    PASSING      *pass; // Handle to Session I/O
+
+private:
     UserRec      *ur;   // Holdes Loaded User Rec
     users        _user; // Handle to Users Database
     language     _lang; // Handle to Language File
 
-    public:
-        
+public:
+
     logon();
-    void start(PASSING *passing, UserRec *user);
+    void start ( PASSING *passing, UserRec *user );
     void login();
-    
+
     void Handle();
     void Name();
     void Password();
@@ -30,12 +31,12 @@ class logon {
     void EmailPriv();
     void Note();
     void Word();
-    void application(); 
-     
-    void ParseVerify(char *filename);
+    void application();
+
+    void ParseVerify ( char *filename );
     void save_user();
     void verify_info();
-       
+
 
 };
 
