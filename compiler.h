@@ -73,7 +73,7 @@
    * HAS_sleep           - sleep() presents or defined here
    * HAS_dos_read        - dos_read() presents or defined here
    * HAS_popen_close     - popen(); pclose() ("pipe open" and "pipe close")
-   * HAS_strupr		 - strupr() presents
+   * HAS_strupr         - strupr() presents
    * HAS_strcasecmp      - strcasecmp()   usualy in <string.h>
    * HAS_strncasecmp     - strncasecmp()  usualy in <string.h>
    * HAS_stricmp         - stricmp()   eq strcasecmp()
@@ -1076,7 +1076,7 @@ int qq(void)
 #   include <process.h>
 #   ifndef P_WAIT
 #     ifdef _P_WAIT
-#       define P_WAIT		_P_WAIT   /* process.h */
+#       define P_WAIT        _P_WAIT   /* process.h */
 #     else
 #       pragma message("Please set P_WAIT to proprietary value: used for spawnvp() call")
 #     endif
@@ -1738,8 +1738,8 @@ int qq(void)
 #  define mysleep(x) sleep(x)
 /*#  define sleep(x) snooze(x*1000000l)*/ /* use sleep() from unistd.h */
 #  define HAS_sleep     1
-#  define HAS_mktime	1  /* in <time.h> */
-#  define HAS_strftime	1  /* in <time.h> */
+#  define HAS_mktime    1  /* in <time.h> */
+#  define HAS_strftime    1  /* in <time.h> */
 #  define HAS_snprintf  1
 #  define HAS_vsnprintf 1
 #  define HAS_popen_close 1 /* popen(); pclose() */
@@ -1869,13 +1869,13 @@ int qq(void)
 #  define USE_STAT_MACROS
 
 #if defined(__LINUX__) || defined(__BSD__) || defined(__CYGWIN__)
-#  define HAS_mktime	/* <time.h> */
-#  define HAS_strftime	/* <time.h> */
+#  define HAS_mktime    /* <time.h> */
+#  define HAS_strftime    /* <time.h> */
 #  define HAS_DIRENT_H  /* <dirent.h> */
 #endif
 
 #if defined(__CYGWIN__)
-#  define HAS_strupr	/* <string.h> from libc (newlib) */
+#  define HAS_strupr    /* <string.h> from libc (newlib) */
 #endif
 
 #  define HAS_popen_close  /* popen(); pclose() */
@@ -2007,9 +2007,9 @@ int qq(void)
 
 #ifndef mysleep
 #   ifdef __GNUC__
-#	warning sleep() call undefined. Please check your compiler documentation for it and write "#define mysleep" into compiler.h
+#    warning sleep() call undefined. Please check your compiler documentation for it and write "#define mysleep" into compiler.h
 #   else
-#	pragma message("sleep() call undefined. Please check your compiler documentation for it and write define into compiler.h")
+#    pragma message("sleep() call undefined. Please check your compiler documentation for it and write define into compiler.h")
 #   endif
 #   define mysleep(x)
 #endif

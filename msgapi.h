@@ -424,7 +424,7 @@ SMAPI_EXT dword _XPENTRY GenMsgIdEx(char *seqdir, unsigned long max_outrun, dwor
   CheckSmapiVersion( ..., smapidate());
  */
 SMAPI_EXT int _XPENTRY CheckSmapiVersion( int need_major, int need_minor,
-                	    int need_patch, const char *cvs_date_string );
+                        int need_patch, const char *cvs_date_string );
 
 /*  Return MSGAPI error text (string constant).
  */

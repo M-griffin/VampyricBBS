@@ -11,7 +11,7 @@
 #ifdef _CH_
 #pragma package <chpcre>
 #include <chdl.h>
-LOAD_CHDL_CODE(pcre, Pcre);
+LOAD_CHDL_CODE ( pcre, Pcre );
 #endif
 
 
@@ -26,7 +26,7 @@ be there. I hope. */
 /* Allow for C++ users */
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Options defined by POSIX. */
@@ -45,49 +45,51 @@ to slot PCRE into existing programs that make POSIX calls. */
 /* Error values. Not all these are relevant or used by the wrapper. */
 
 enum {
-  REG_ASSERT = 1,  /* internal error ? */
-  REG_BADBR,       /* invalid repeat counts in {} */
-  REG_BADPAT,      /* pattern error */
-  REG_BADRPT,      /* ? * + invalid */
-  REG_EBRACE,      /* unbalanced {} */
-  REG_EBRACK,      /* unbalanced [] */
-  REG_ECOLLATE,    /* collation error - not relevant */
-  REG_ECTYPE,      /* bad class */
-  REG_EESCAPE,     /* bad escape sequence */
-  REG_EMPTY,       /* empty expression */
-  REG_EPAREN,      /* unbalanced () */
-  REG_ERANGE,      /* bad range inside [] */
-  REG_ESIZE,       /* expression too big */
-  REG_ESPACE,      /* failed to get memory */
-  REG_ESUBREG,     /* bad back reference */
-  REG_INVARG,      /* bad argument */
-  REG_NOMATCH      /* match failed */
+    REG_ASSERT = 1,  /* internal error ? */
+    REG_BADBR,       /* invalid repeat counts in {} */
+    REG_BADPAT,      /* pattern error */
+    REG_BADRPT,      /* ? * + invalid */
+    REG_EBRACE,      /* unbalanced {} */
+    REG_EBRACK,      /* unbalanced [] */
+    REG_ECOLLATE,    /* collation error - not relevant */
+    REG_ECTYPE,      /* bad class */
+    REG_EESCAPE,     /* bad escape sequence */
+    REG_EMPTY,       /* empty expression */
+    REG_EPAREN,      /* unbalanced () */
+    REG_ERANGE,      /* bad range inside [] */
+    REG_ESIZE,       /* expression too big */
+    REG_ESPACE,      /* failed to get memory */
+    REG_ESUBREG,     /* bad back reference */
+    REG_INVARG,      /* bad argument */
+    REG_NOMATCH      /* match failed */
 };
 
 
 /* The structure representing a compiled regular expression. */
 
-typedef struct {
-  void *re_pcre;
-  size_t re_nsub;
-  size_t re_erroffset;
+typedef struct
+{
+    void *re_pcre;
+    size_t re_nsub;
+    size_t re_erroffset;
 } regex_t;
 
 /* The structure in which a captured offset is returned. */
 
 typedef int regoff_t;
 
-typedef struct {
-  regoff_t rm_so;
-  regoff_t rm_eo;
+typedef struct
+{
+    regoff_t rm_so;
+    regoff_t rm_eo;
 } regmatch_t;
 
 /* The functions */
 
-extern int regcomp(regex_t *preg, const char *pattern, int cflags);
-extern int regexec(regex_t *preg, const char *string, size_t nmatch, regmatch_t pmatch[], int eflags);
-extern size_t regerror(int errcode, const regex_t *preg, char *errbuf, size_t errbuf_size);
-extern void regfree(regex_t *preg);
+extern int regcomp ( regex_t *preg, const char *pattern, int cflags );
+extern int regexec ( regex_t *preg, const char *string, size_t nmatch, regmatch_t pmatch[], int eflags );
+extern size_t regerror ( int errcode, const regex_t *preg, char *errbuf, size_t errbuf_size );
+extern void regfree ( regex_t *preg );
 
 
 #ifdef __cplusplus

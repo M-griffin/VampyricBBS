@@ -17,8 +17,8 @@
              - Added Config file for BBS Configuration Settings
              - Gota Redo input key system so backspace doesn't go before init position.
                gota parse and send escape code for cursor position.. argh!!
-	02/03/04 - Took all day but fixed ofstream bug, was start thread wrong passing without
-	           allocating new! Also don't put std::string in structs.. :)
+    02/03/04 - Took all day but fixed ofstream bug, was start thread wrong passing without
+               allocating new! Also don't put std::string in structs.. :)
     02/04/04 - Fixed cpu usage in menu editor thread, don't forget a Sleep(10) for each
                poll loop, this keeps the cpu useage down but doesn't slow the program down.
     02/09/04 - Finished most of the Menu Editor, Working on Lightbar Menu Parseing,
@@ -100,13 +100,13 @@
 
 using namespace std;
 
-HANDLE	exec_mutex;
+HANDLE    exec_mutex;
 
 #ifndef min
-    #define min(a,b) ( ( (a) < (b) ) ? (a) : (b) )
+#define min(a,b) ( ( (a) < (b) ) ? (a) : (b) )
 #endif
 #ifndef max
-    #define max(a,b) ( ( (a) > (b) ) ? (a) : (b) )
+#define max(a,b) ( ( (a) > (b) ) ? (a) : (b) )
 #endif
 
 
@@ -149,101 +149,109 @@ char ANSIPATH[10] = {0};
 char MESGPATH[10] = {0};
 
 // Transfer / Error Logs
-void logntp(char *text) {
+void logntp ( char *text )
+{
 
     FILE *fp1;
-    if((fp1 = fopen("Vamp-bbs.Log", "a")) == NULL) {
-        printf("Fatal! Couldn't write to log file!\n");
+    if ( ( fp1 = fopen ( "Vamp-bbs.Log", "a" ) ) == NULL )
+    {
+        printf ( "Fatal! Couldn't write to log file!\n" );
         return;
     }
-    fprintf(fp1, "* %s\n",text);
-    fclose(fp1);
+    fprintf ( fp1, "* %s\n",text );
+    fclose ( fp1 );
 }
 
 // Printf out in session class
-void pf(char *text) {
+void pf ( char *text )
+{
 
-    printf("%s",text);
+    printf ( "%s",text );
 }
 
-    // Keeping this for later 2 key hot Key Combo's
+// Keeping this for later 2 key hot Key Combo's
 
-    /*
-    unsigned char c;
-    char rBuffer[1024]={0};
-    bool result;
-    char key2[3]={0};
-    int  cnt = 0;
+/*
+unsigned char c;
+char rBuffer[1024]={0};
+bool result;
+char key2[3]={0};
+int  cnt = 0;
 
-    // Incomming Socket/Message Loop
-    while (1) {
-        // Check conenction and Poll for messages
-        if( pass->session->isActive() ) {
-            result = pass->session->pollc(c);
+// Incomming Socket/Message Loop
+while (1) {
+    // Check conenction and Poll for messages
+    if( pass->session->isActive() ) {
+        result = pass->session->pollc(c);
 
-             if (result) {
-                // Check for Backspace first!
-                if (c == 0x08) {
-                    if (cnt != 0)
-                        --cnt;
-                }
-                else if (c == '\r') {
-                    cnt = 0;
-                    memset(&key2,0,sizeof(key2));
-                }
-                else if (cnt == 0) {
-                     key2[0] = c; cnt++;
-                }
-                else {
-                    key2[1] = c; cnt++;
-                }
-
-                if (cnt < 3) {
-                    if (strcmp(key2,"/t") == 0) {
-
-                        ansiPrintf(pass, "logon");
-                        memset(&key2,0,sizeof(key2));
-                        cnt = 0;
-                    }
-
-                    else if (strcmp(key2,"/s") == 0) {
-                        logntp("Entering Menu Edit");
-                        //menu_edit(pass);
-                        pass->session->puts("\x1b[0m");
-                        memset(&key2,0,sizeof(key2));
-                        cnt = 0;
-                    }
-                    else if (strcmp(key2,"/g") == 0) {
-                        pass->session->printf("\r\nGoodbye.. .");
-                        pass->session->stop();
-                        memset(&key2,0,sizeof(key2));
-                        cnt = 0;
-                    }
-                }
+         if (result) {
+            // Check for Backspace first!
+            if (c == 0x08) {
+                if (cnt != 0)
+                    --cnt;
+            }
+            else if (c == '\r') {
+                cnt = 0;
+                memset(&key2,0,sizeof(key2));
+            }
+            else if (cnt == 0) {
+                 key2[0] = c; cnt++;
+            }
+            else {
+                key2[1] = c; cnt++;
             }
 
+            if (cnt < 3) {
+                if (strcmp(key2,"/t") == 0) {
 
-        }else { delete pass; _endthread(); }
+                    ansiPrintf(pass, "logon");
+                    memset(&key2,0,sizeof(key2));
+                    cnt = 0;
+                }
 
-        // Give small delay for for fast ansi and text display
-        Sleep(10);
+                else if (strcmp(key2,"/s") == 0) {
+                    logntp("Entering Menu Edit");
+                    //menu_edit(pass);
+                    pass->session->puts("\x1b[0m");
+                    memset(&key2,0,sizeof(key2));
+                    cnt = 0;
+                }
+                else if (strcmp(key2,"/g") == 0) {
+                    pass->session->printf("\r\nGoodbye.. .");
+                    pass->session->stop();
+                    memset(&key2,0,sizeof(key2));
+                    cnt = 0;
+                }
+            }
+        }
 
-   }*/
+
+    }else { delete pass; _endthread(); }
+
+    // Give small delay for for fast ansi and text display
+    Sleep(10);
+
+}*/
 
 
-int handler( char *line, class ZTelnetServerSession *session ) {
+int handler ( char *line, class ZTelnetServerSession *session )
+{
 
-    if( line == NULL ) {
-        printf( "\nConnection Established.. .\n" );
+    if ( line == NULL )
+    {
+        printf ( "\nConnection Established.. .\n" );
     }
-    else if( line == (char *)1 ) {
-        printf( "\nLost connection\n" );
+    else if ( line == ( char * ) 1 )
+    {
+        printf ( "\nLost connection\n" );
     }
-    else {
+    else
+    {
         //printf( "Received command %s\n", line );
-        printf("\n");
-        if( !strcmp( line, "quit" ) ) {
-            session->printf( "Goodbye!\n" );
+        printf ( "\n" );
+        if ( !strcmp ( line, "quit" ) )
+        {
+            session->printf ( "Goodbye!\n" );
             return 0;
         }
     }
@@ -254,28 +262,31 @@ int handler( char *line, class ZTelnetServerSession *session ) {
 // This is the System start for each Seperate Session Thread
 //--------------------------------------------------------------------
 
-void StartSessionThread(void *p) {
+void StartSessionThread ( void *p )
+{
 
     //PASSING *pass = (PASSING*) p;
 
-    class main_system *ms = (main_system*) p;
+    class main_system *ms = ( main_system* ) p;
 
 
     // Starts the Session for this Telnet Connection
-    ms->pass->session->start(ms->pass->z, ms->pass->handler);
+    ms->pass->session->start ( ms->pass->z, ms->pass->handler );
 
 
     unsigned char c;
-    while(ms->pass->session->isActive()) {
+    while ( ms->pass->session->isActive() )
+    {
 
         // Poll for Ansi Detection
-        ms->pass->session->pollc(c);
-        if (!ms->pass->session->detection) {
+        ms->pass->session->pollc ( c );
+        if ( !ms->pass->session->detection )
+        {
             // Jumps into main_system
             //system_execute(pass);
             ms->system_execute();
         }
-        Sleep(10);
+        Sleep ( 10 );
     }
 
 
@@ -288,7 +299,8 @@ void StartSessionThread(void *p) {
 // ZTelnetServerSession
 //--------------------------------------------------------------------
 
-ZTelnetServerSession::ZTelnetServerSession() {
+ZTelnetServerSession::ZTelnetServerSession()
+{
     z = NULL;
     recvState = ST_DEFAULT;
     inSubOpt = 0;
@@ -300,13 +312,16 @@ ZTelnetServerSession::ZTelnetServerSession() {
     echoMode = 1;
 }
 
-ZTelnetServerSession::~ZTelnetServerSession() {
-    if( isActive() ) {
+ZTelnetServerSession::~ZTelnetServerSession()
+{
+    if ( isActive() )
+    {
         stop();
     }
 }
 
-int ZTelnetServerSession::start( Zocket *_z, ZTelnetServerCmdHandler *_handler ) {
+int ZTelnetServerSession::start ( Zocket *_z, ZTelnetServerCmdHandler *_handler )
+{
     // The zocket has just been opened, so reset it
     // and perform the initial Telnet negotiation
     handler     = _handler;
@@ -318,47 +333,52 @@ int ZTelnetServerSession::start( Zocket *_z, ZTelnetServerCmdHandler *_handler )
     ansigetxy   = false;
     ScrollBreak = false;
 
-    if( puts( IAC WILL SUPPRESS_GO_AHEAD ) < 0 ) return -1;
-    if( puts( IAC WILL ECHO ) < 0 ) return -1;
+    if ( puts ( IAC WILL SUPPRESS_GO_AHEAD ) < 0 ) return -1;
+    if ( puts ( IAC WILL ECHO ) < 0 ) return -1;
 
     // Terminal Detection
-    if( puts( "\r\n"      // locate cursor at column 1
-          "\x1b[99B"  // locate cursor as far down as possible
-          "\x1b[6n"   // Get cursor position
-          "\x1b[!_"   // RIP?
-          "\x1b[0t_"  // WIP?
-          "\x1b[0m_"  // "Normal" colors
-          "\x1b[2J"   // clear screen
-          "\x1b[H"    // home cursor
-          "\xC"       // clear screen (in case not ANSI)
-          "\r"        // Move cursor left (in case previous char printed)
-          )  < 0 ) return -1;
+    if ( puts ( "\r\n"    // locate cursor at column 1
+                "\x1b[99B"  // locate cursor as far down as possible
+                "\x1b[6n"   // Get cursor position
+                "\x1b[!_"   // RIP?
+                "\x1b[0t_"  // WIP?
+                "\x1b[0m_"  // "Normal" colors
+                "\x1b[2J"   // clear screen
+                "\x1b[H"    // home cursor
+                "\xC"       // clear screen (in case not ANSI)
+                "\r"        // Move cursor left (in case previous char printed)
+              )  < 0 ) return -1;
 
-	Sleep(20);
+    Sleep ( 20 );
 
     return 1;
 }
 
-int ZTelnetServerSession::stop() {
+int ZTelnetServerSession::stop()
+{
     // Shutdown and reset.
-    if( z != NULL ) {
+    if ( z != NULL )
+    {
         delete z;
     }
     z = NULL;
 
-    if( handler != NULL ) {
+    if ( handler != NULL )
+    {
         // Tell the session that it has been shutdown.
         // NOTE: This is kind of hacky. -TNB
-        (*handler)( (char *) 1, this );
+        ( *handler ) ( ( char * ) 1, this );
     }
 
     return 1;
 }
 
-int ZTelnetServerSession::write( void *buffer, int len ) {
-    if( !z ) return 0;
-    int result = z->write( buffer, len, 0 );
-    if( result < 0 ) {
+int ZTelnetServerSession::write ( void *buffer, int len )
+{
+    if ( !z ) return 0;
+    int result = z->write ( buffer, len, 0 );
+    if ( result < 0 )
+    {
         stop();
         return -1;
     }
@@ -367,73 +387,83 @@ int ZTelnetServerSession::write( void *buffer, int len ) {
     /*
     // ZBS replaced with immediate write 26 Apr 2001
     #define OUT_SIZE (4800)
-	char *buf = (char *)buffer;
-	if( outCursor + len > OUT_SIZE ) {
-		return 0;
-	}
+    char *buf = (char *)buffer;
+    if( outCursor + len > OUT_SIZE ) {
+        return 0;
+    }
 
-	int outBytes = 0;
-	char *d = outBuffer + outCursor;
-	for( int i=0; i<len; i++ ) {
-		if( addCRMode && buf[i]=='\n' ) {
-			*d++ = '\r';
-			outBytes++;
-		}
-		*d++ = buf[i];
-		outBytes++;
-		if( outCursor + outBytes >= OUT_SIZE ) {
-			return 0;
-		}
-	}
+    int outBytes = 0;
+    char *d = outBuffer + outCursor;
+    for( int i=0; i<len; i++ ) {
+        if( addCRMode && buf[i]=='\n' ) {
+            *d++ = '\r';
+            outBytes++;
+        }
+        *d++ = buf[i];
+        outBytes++;
+        if( outCursor + outBytes >= OUT_SIZE ) {
+            return 0;
+        }
+    }
 
-	outCursor += outBytes;
-	return outBytes;
+    outCursor += outBytes;
+    return outBytes;
     */
 }
 
-int ZTelnetServerSession::puts( char *s ) {
+int ZTelnetServerSession::puts ( char *s )
+{
     int result = 0;
-    while ( isActive() ) {
-        result = write(s, strlen(s));
-        if (result > 0) break;
-        Sleep(10);
+    while ( isActive() )
+    {
+        result = write ( s, strlen ( s ) );
+        if ( result > 0 ) break;
+        Sleep ( 10 );
     }
-    return(result);
+    return ( result );
 }
 
-int ZTelnetServerSession::putC( char c ) {
+int ZTelnetServerSession::putC ( char c )
+{
     int result = 0;
-    while ( isActive() ) {
-        result = result = write(&c, 1);
-        if (result > 0) break;
-        Sleep(10);
+    while ( isActive() )
+    {
+        result = result = write ( &c, 1 );
+        if ( result > 0 ) break;
+        Sleep ( 10 );
     }
-    return(result);
+    return ( result );
 }
 
-int ZTelnetServerSession::printf( char *fmt, ... ) {
+int ZTelnetServerSession::printf ( char *fmt, ... )
+{
     char buffer[1024];
     va_list argptr;
-    if( fmt != buffer ) {
-        va_start( argptr, fmt );
-        vsprintf( buffer, fmt, argptr );
-        va_end( argptr );
+    if ( fmt != buffer )
+    {
+        va_start ( argptr, fmt );
+        vsprintf ( buffer, fmt, argptr );
+        va_end ( argptr );
     }
     buffer[1023] = '\0';
-    return puts( buffer );
+    return puts ( buffer );
 }
 
-int ZTelnetServerSession::flush() {
+int ZTelnetServerSession::flush()
+{
 
     // Write all the available output to the zocket, blocking.
-    while( outCursor > 0 ) {
-        int result = z->write( outBuffer, outCursor, 0 );
-        if( result < outCursor ) {
+    while ( outCursor > 0 )
+    {
+        int result = z->write ( outBuffer, outCursor, 0 );
+        if ( result < outCursor )
+        {
             stop();
             return 0;
         }
-        else {
-            memmove( outBuffer, outBuffer+result, outCursor-result );
+        else
+        {
+            memmove ( outBuffer, outBuffer+result, outCursor-result );
             outCursor -= result;
         }
     }
@@ -444,18 +474,20 @@ int ZTelnetServerSession::flush() {
 // Reads and Returns a single char! - Returns false with no data and true with data
 // Returns buffer after \r is received <ENTER>
 
-bool ZTelnetServerSession::polls(char *rBuffer) {
+bool ZTelnetServerSession::polls ( char *rBuffer )
+{
 
     struct sockaddr_in Their_addr;
-    memset(&Their_addr,0,sizeof(Their_addr));
+    memset ( &Their_addr,0,sizeof ( Their_addr ) );
 
     int sin_size;
-    sin_size = sizeof(struct sockaddr_in);
+    sin_size = sizeof ( struct sockaddr_in );
 
     // Attempt to read some data from the zocket, without blocking.
     char readBuffer[READ_BUFF_SIZE];
-    int len = z->read( readBuffer, READ_BUFF_SIZE, 0 );
-    if( len == -1 ) {
+    int len = z->read ( readBuffer, READ_BUFF_SIZE, 0 );
+    if ( len == -1 )
+    {
         stop();
         return 0;
     }
@@ -465,112 +497,138 @@ bool ZTelnetServerSession::polls(char *rBuffer) {
     int count = len;
     char tmpBuf[20]; // Hold Escape Sequences
 
-    while( count-- && inCursor < zTelnetServer_IN_SIZE-1 ) {
+    while ( count-- && inCursor < zTelnetServer_IN_SIZE-1 )
+    {
         unsigned char c = readBuffer[index];
 
         // Handle either as a command or a raw characters
-        switch( recvState ) {
+        switch ( recvState )
+        {
             case ST_DEFAULT:
-                if( c == CMD_IAC ) {
+                if ( c == CMD_IAC )
+                {
                     // Escaped character, change state
                     recvState = ST_ESCAPE;
                 }
-                else {
-                    if( inSubOpt ) {
+                else
+                {
+                    if ( inSubOpt )
+                    {
                         // Add the character to the subOpt buffer
                     }
-                    else {
-                        if( charMode ) {
-                            if( handler != NULL ) {
-                                if( echoMode ) printf("%c", c);
+                    else
+                    {
+                        if ( charMode )
+                        {
+                            if ( handler != NULL )
+                            {
+                                if ( echoMode ) printf ( "%c", c );
                                 //if( echoMode ) write( &c, 1 );
                                 char buf[2];
                                 buf[0] = c;
                                 buf[1] = 0;
-                                if( !(*handler)(buf, this) ) {
+                                if ( ! ( *handler ) ( buf, this ) )
+                                {
                                     stop();
                                     return false;
                                 }
                             }
                         }
-                        else {
+                        else
+                        {
                             // Catch all Input Escape Key Sequences from user's terminal
-                            if (c == ESC) {
-                                 // Handle Inital Terminal Detection / Login to BBS
-                                 if (detection) {
-                                     bool rec = false;
-                                     for (int i = 0;;i++) {
-                                        if (readBuffer[index] == 'R') {
-                                            printf("\r\n%s.. .\r\n\r\n", VERSION);
-                                            printf("Emulation Detected! Ansi Defaulted.. .\r\n");
-                                            pf("Emulation Detected! Ansi Defaulted.. .\r\n");
-                                            getpeername(z->sockFD, (struct sockaddr *)&Their_addr, &sin_size);
-                                            printf ("Peer Address: %s\r\n", inet_ntoa(Their_addr.sin_addr));
+                            if ( c == ESC )
+                            {
+                                // Handle Inital Terminal Detection / Login to BBS
+                                if ( detection )
+                                {
+                                    bool rec = false;
+                                    for ( int i = 0;; i++ )
+                                    {
+                                        if ( readBuffer[index] == 'R' )
+                                        {
+                                            printf ( "\r\n%s.. .\r\n\r\n", VERSION );
+                                            printf ( "Emulation Detected! Ansi Defaulted.. .\r\n" );
+                                            pf ( "Emulation Detected! Ansi Defaulted.. .\r\n" );
+                                            getpeername ( z->sockFD, ( struct sockaddr * ) &Their_addr, &sin_size );
+                                            printf ( "Peer Address: %s\r\n", inet_ntoa ( Their_addr.sin_addr ) );
                                             //pf("Peer Address: " << inet_ntoa(Their_addr.sin_addr) << endl;
-                                            puts("\r\n\r\n");
-                                            Sleep(1000);
-                                            rec = true; break;
+                                            puts ( "\r\n\r\n" );
+                                            Sleep ( 1000 );
+                                            rec = true;
+                                            break;
                                         }
-                                        if (readBuffer[index] == '\0') {
-                                            len = z->read( readBuffer, READ_BUFF_SIZE, 0 );
-                                            if (len == -1) {
-                                                printf("\r\n%s.. .\r\n\r\n", VERSION);
-                                                printf("Emulation Not Detected! Ansi Defaulted.. .\r\n");
-                                                pf("Emulation Not Detected! Ansi Defaulted.. .\r\n");
-                                                getpeername(z->sockFD, (struct sockaddr *)&Their_addr, &sin_size);
-                                                printf ("Peer Address: %s\r\n", inet_ntoa(Their_addr.sin_addr));
+                                        if ( readBuffer[index] == '\0' )
+                                        {
+                                            len = z->read ( readBuffer, READ_BUFF_SIZE, 0 );
+                                            if ( len == -1 )
+                                            {
+                                                printf ( "\r\n%s.. .\r\n\r\n", VERSION );
+                                                printf ( "Emulation Not Detected! Ansi Defaulted.. .\r\n" );
+                                                pf ( "Emulation Not Detected! Ansi Defaulted.. .\r\n" );
+                                                getpeername ( z->sockFD, ( struct sockaddr * ) &Their_addr, &sin_size );
+                                                printf ( "Peer Address: %s\r\n", inet_ntoa ( Their_addr.sin_addr ) );
                                                 //cout << "Peer Address: " << inet_ntoa(Their_addr.sin_addr) << endl;
-                                                puts("\r\n\r\n");
-                                                Sleep(1000);
+                                                puts ( "\r\n\r\n" );
+                                                Sleep ( 1000 );
                                                 break;
                                             }
                                         }
                                         tmpBuf[i] = readBuffer[index];
                                         ++index;
-                                        if (readBuffer[index] == ESC) {
+                                        if ( readBuffer[index] == ESC )
+                                        {
                                             --index;
                                             break;
                                         }
                                     }
-                                    memset(&readBuffer,0,READ_BUFF_SIZE);
+                                    memset ( &readBuffer,0,READ_BUFF_SIZE );
                                     detection = false;
                                     return false;
                                 }
                                 // Get ansi XY Position / Temp only need responce for Ansi display
-                                else if (ansigetxy) {
+                                else if ( ansigetxy )
+                                {
                                     bool rec = false;
-                                     for (int i = 0;;i++) {
-                                        if (readBuffer[index] == 'R') {
-                                            rec = true; break;
+                                    for ( int i = 0;; i++ )
+                                    {
+                                        if ( readBuffer[index] == 'R' )
+                                        {
+                                            rec = true;
+                                            break;
                                         }
-                                        if (readBuffer[index] == '\0') {
-                                            len = z->read( readBuffer, READ_BUFF_SIZE, 0 );
-                                            if (len == -1) {
+                                        if ( readBuffer[index] == '\0' )
+                                        {
+                                            len = z->read ( readBuffer, READ_BUFF_SIZE, 0 );
+                                            if ( len == -1 )
+                                            {
                                                 break;
                                             }
                                         }
                                         tmpBuf[i] = readBuffer[index];
                                         ++index;
-                                        if (readBuffer[index] == ESC) {
+                                        if ( readBuffer[index] == ESC )
+                                        {
                                             --index;
                                             break;
                                         }
                                     }
-                                    memset(&readBuffer,0,READ_BUFF_SIZE);
+                                    memset ( &readBuffer,0,READ_BUFF_SIZE );
                                     ansigetxy = false;
                                     return false;
                                 }
-                                else {
+                                else
+                                {
                                     // Capture Arror Key ESC Codes
                                     // If ESC KEy found Capute to Global ESC Bufer so
                                     // Function can pull it in and test it..
 
-                                    strcpy(EscapeKey,"");
+                                    strcpy ( EscapeKey,"" );
                                     EscapeKey[0] = readBuffer[index];    // char 27
                                     EscapeKey[1] = readBuffer[++index];  // char [
                                     EscapeKey[2] = readBuffer[++index];  // char Key
                                     //cout << EscapeKey;
-                                    memset(&readBuffer,0,READ_BUFF_SIZE);
+                                    memset ( &readBuffer,0,READ_BUFF_SIZE );
                                     return true;
                                 }
                             }
@@ -578,7 +636,8 @@ bool ZTelnetServerSession::polls(char *rBuffer) {
                             // If the character is a \r, send a newline as well, then terminate the command buffer and send
                             // the line to the command processor.
 
-                            else if( c == '\r' ) {
+                            else if ( c == '\r' )
+                            {
                                 // All carriage returns get converted to CRLF (on echo only)
 
                                 //if( echoMode ) printf("\r\n");
@@ -594,47 +653,55 @@ bool ZTelnetServerSession::polls(char *rBuffer) {
                                 }*/
 
                                 inCursor = 0;
-                                strcpy(rBuffer,inBuffer);
+                                strcpy ( rBuffer,inBuffer );
                                 return true;
                             }
-                            else if( c == 0x08 || int(c) == 127) { // 127 Linux Backspace
+                            else if ( c == 0x08 || int ( c ) == 127 ) // 127 Linux Backspace
+                            {
                                 // Destructively backspace.
-                                if( inCursor > 0) {
+                                if ( inCursor > 0 )
+                                {
                                     --inCursor;
-                                    if( echoMode ) {
-                                        printf("%c %c", 0x08,0x08);
+                                    if ( echoMode )
+                                    {
+                                        printf ( "%c %c", 0x08,0x08 );
                                     }
                                 }
                                 // Standard C++ Console i/o
-                                pf("\b \b");
+                                pf ( "\b \b" );
 
                             }
-                            else if( c == '\n' || c == '\0' ) {
+                            else if ( c == '\n' || c == '\0' )
+                            {
                                 // HACK: Swallow newlines in the input,
                                 // so that Microsoft's POS telnet client will look right.
                                 // For some reason, I was getting '\0' characters
                                 // being sent down the line. Swallow them too.
                                 return false;
                             }
-                            else {
+                            else
+                            {
                                 // This character is to be kept, so add it to the inBuffer
 
                                 // User C++ Iostream for Consle I/O
-                                pf((char *)&c);
+                                pf ( ( char * ) &c );
 
                                 inBuffer[inCursor] = c;
                                 ++inCursor;
 
                                 // Echo this character.
-                                if( passwdMode ) {
-                                    if( echoMode ) printf("%c", passwdChar);
+                                if ( passwdMode )
+                                {
+                                    if ( echoMode ) printf ( "%c", passwdChar );
                                 }
-                                else {
-                                    if( echoMode ) printf("%c", c);
+                                else
+                                {
+                                    if ( echoMode ) printf ( "%c", c );
                                 }
 
                                 // Reset Buffer at 1 line of data received 80 chars
-                                if (inCursor > READ_BUFF_SIZE-1) {
+                                if ( inCursor > READ_BUFF_SIZE-1 )
+                                {
                                     inBuffer[inCursor] = '\0';
                                     inCursor = 0;
                                     return false;
@@ -646,28 +713,34 @@ bool ZTelnetServerSession::polls(char *rBuffer) {
                 break;
 
             case ST_ESCAPE:
-                if( c == CMD_IAC ) {
+                if ( c == CMD_IAC )
+                {
                     // This was not a command, but simply an escaped
                     // CMD_IAC character. Store a CMD_IAC in the in buffer and
                     // return to the default state.
-                    if( inSubOpt ) {
+                    if ( inSubOpt )
+                    {
                         // Add the character to the subOpt buffer
                     }
-                    else {
+                    else
+                    {
                         inBuffer[inCursor++] = c;
                     }
                     recvState = ST_DEFAULT;
                 }
-                else {
+                else
+                {
                     // This is a command sequence, store it and change the state.
                     cmdId = c;
                     recvState = ST_COMMAND;
                 }
                 break;
 
-            case ST_COMMAND: {
+            case ST_COMMAND:
+                {
                     // The last part of a command sequence
-                    switch( c ) {
+                    switch ( c )
+                    {
                         case CMD_WILL:
                         case CMD_WONT:
                         case CMD_DO:
@@ -701,17 +774,17 @@ bool ZTelnetServerSession::polls(char *rBuffer) {
 
     // Write any available output without blocking.
     /* ZBS removed and converted to immediate write
-	if( outCursor > 0 ) {
-		int result = z->write( outBuffer, outCursor, 0 );
-		if( result == -1 ) {
-			stop();
-			return 0;
-		}
-		else {
-			memmove( outBuffer, outBuffer+result, outCursor-result );
-			outCursor -= result;
-		}
-	}
+    if( outCursor > 0 ) {
+        int result = z->write( outBuffer, outCursor, 0 );
+        if( result == -1 ) {
+            stop();
+            return 0;
+        }
+        else {
+            memmove( outBuffer, outBuffer+result, outCursor-result );
+            outCursor -= result;
+        }
+    }
     */
 
 
@@ -721,19 +794,21 @@ bool ZTelnetServerSession::polls(char *rBuffer) {
 
 
 // Reads and Returns a single char! - Returns false with no data and true with data
-bool ZTelnetServerSession::pollc(unsigned char &c) {
+bool ZTelnetServerSession::pollc ( unsigned char &c )
+{
 
     struct sockaddr_in Their_addr;
-    memset(&Their_addr,0,sizeof(Their_addr));
+    memset ( &Their_addr,0,sizeof ( Their_addr ) );
 
     int sin_size;
-    sin_size = sizeof(struct sockaddr_in);
+    sin_size = sizeof ( struct sockaddr_in );
 
 
     // Attempt to read some data from the zocket, without blocking.
     char readBuffer[READ_BUFF_SIZE];
-    int len = z->read( readBuffer, READ_BUFF_SIZE, 0 );
-    if( len == -1 ) {
+    int len = z->read ( readBuffer, READ_BUFF_SIZE, 0 );
+    if ( len == -1 )
+    {
         stop();
         return 0;
     }
@@ -743,124 +818,151 @@ bool ZTelnetServerSession::pollc(unsigned char &c) {
     int count = len;
     char tmpBuf[20]; // Hold Escape Sequences
 
-    while( count-- && inCursor < zTelnetServer_IN_SIZE-1 ) {
+    while ( count-- && inCursor < zTelnetServer_IN_SIZE-1 )
+    {
 
         //unsigned char c = readBuffer[index];
         c = readBuffer[index];
 
         // Handle either as a command or a raw characters
-        switch( recvState ) {
+        switch ( recvState )
+        {
             case ST_DEFAULT:
-                if( c == CMD_IAC ) {
+                if ( c == CMD_IAC )
+                {
                     // Escaped character, change state
                     recvState = ST_ESCAPE;
                 }
-                else {
-                    if( inSubOpt ) {
+                else
+                {
+                    if ( inSubOpt )
+                    {
                         // Add the character to the subOpt buffer
                     }
-                    else {
-                        if( charMode ) {
+                    else
+                    {
+                        if ( charMode )
+                        {
                             // Figure this out more!!
-                            if( handler != NULL ) {
+                            if ( handler != NULL )
+                            {
                                 //if( echoMode ) //printf("%c", c);
                                 char buf[2];
                                 buf[0] = c;
                                 buf[1] = 0;
-                                if( !(*handler)(buf, this) ) {
+                                if ( ! ( *handler ) ( buf, this ) )
+                                {
                                     stop();
                                     return false;
                                 }
                             }
                         }
-                        else {
+                        else
+                        {
 
                             // Catch all Input Escape Key Sequences from user
-                            if (c == ESC) {
-                                 // Handle Inital Terminal Detection / Login to BBS
-                                 if (detection) {
-                                     bool rec = false;
-                                     for (int i = 0;;i++) {
-                                        if (readBuffer[index] == 'R') {
-                                            printf("\r\n%s.. .\r\n\r\n", VERSION);
-                                            printf("Emulation Detected! Ansi Defaulted.. .\r\n");
-                                            pf("Emulation Detected! Ansi Defaulted.. .\r\n");
-                                            getpeername(z->sockFD, (struct sockaddr *)&Their_addr, &sin_size);
-                                            printf ("Peer Address: %s\r\n", inet_ntoa(Their_addr.sin_addr));
+                            if ( c == ESC )
+                            {
+                                // Handle Inital Terminal Detection / Login to BBS
+                                if ( detection )
+                                {
+                                    bool rec = false;
+                                    for ( int i = 0;; i++ )
+                                    {
+                                        if ( readBuffer[index] == 'R' )
+                                        {
+                                            printf ( "\r\n%s.. .\r\n\r\n", VERSION );
+                                            printf ( "Emulation Detected! Ansi Defaulted.. .\r\n" );
+                                            pf ( "Emulation Detected! Ansi Defaulted.. .\r\n" );
+                                            getpeername ( z->sockFD, ( struct sockaddr * ) &Their_addr, &sin_size );
+                                            printf ( "Peer Address: %s\r\n", inet_ntoa ( Their_addr.sin_addr ) );
                                             //cout << "Peer Address: " << inet_ntoa(Their_addr.sin_addr) << endl;
-                                            puts("\r\n\r\n");
-                                            Sleep(1500);
-                                            rec = true; break;
+                                            puts ( "\r\n\r\n" );
+                                            Sleep ( 1500 );
+                                            rec = true;
+                                            break;
                                         }
-                                        if (readBuffer[index] == '\0') {
-                                            len = z->read( readBuffer, READ_BUFF_SIZE, 0 );
-                                            if (len == -1) {
-                                                printf("\r\n%s.. .\r\n\r\n", VERSION);
-                                                printf("Emulation Not Detected! Ansi Defaulted.. .\r\n");
-                                                pf("Emulation Not Detected! Ansi Defaulted.. .\r\n");
-                                                getpeername(z->sockFD, (struct sockaddr *)&Their_addr, &sin_size);
-                                                printf ("Peer Address: %s\r\n", inet_ntoa(Their_addr.sin_addr));
+                                        if ( readBuffer[index] == '\0' )
+                                        {
+                                            len = z->read ( readBuffer, READ_BUFF_SIZE, 0 );
+                                            if ( len == -1 )
+                                            {
+                                                printf ( "\r\n%s.. .\r\n\r\n", VERSION );
+                                                printf ( "Emulation Not Detected! Ansi Defaulted.. .\r\n" );
+                                                pf ( "Emulation Not Detected! Ansi Defaulted.. .\r\n" );
+                                                getpeername ( z->sockFD, ( struct sockaddr * ) &Their_addr, &sin_size );
+                                                printf ( "Peer Address: %s\r\n", inet_ntoa ( Their_addr.sin_addr ) );
                                                 //cout << "Peer Address: " << inet_ntoa(Their_addr.sin_addr) << endl;
-                                                puts("\r\n\r\n");
-                                                Sleep(1500);
+                                                puts ( "\r\n\r\n" );
+                                                Sleep ( 1500 );
                                                 break;
                                             }
                                         }
                                         tmpBuf[i] = readBuffer[index];
                                         ++index;
-                                        if (readBuffer[index] == ESC) {
+                                        if ( readBuffer[index] == ESC )
+                                        {
                                             --index;
                                             break;
                                         }
                                     }
-                                    memset(&readBuffer,0,READ_BUFF_SIZE);
+                                    memset ( &readBuffer,0,READ_BUFF_SIZE );
                                     detection = false;
                                     return false;
                                 }
                                 // Get ansi XY Position / Temp only need responce for Ansi display
-                                else if (ansigetxy) {
+                                else if ( ansigetxy )
+                                {
                                     //cout << "\nansigetxy ";
                                     bool rec = false;
-                                     for (int i = 0;;i++) {
-                                        if (readBuffer[index] == 'R') {
-                                            rec = true; break;
+                                    for ( int i = 0;; i++ )
+                                    {
+                                        if ( readBuffer[index] == 'R' )
+                                        {
+                                            rec = true;
+                                            break;
                                         }
-                                        if (readBuffer[index] == '\0') {
-                                            len = z->read( readBuffer, READ_BUFF_SIZE, 0 );
-                                            if (len == -1) {
+                                        if ( readBuffer[index] == '\0' )
+                                        {
+                                            len = z->read ( readBuffer, READ_BUFF_SIZE, 0 );
+                                            if ( len == -1 )
+                                            {
                                                 break;
                                             }
                                         }
                                         tmpBuf[i] = readBuffer[index];
                                         ++index;
-                                        if (readBuffer[index] == ESC) {
+                                        if ( readBuffer[index] == ESC )
+                                        {
                                             --index;
                                             break;
                                         }
                                     }
-                                    memset(&readBuffer,0,READ_BUFF_SIZE);
+                                    memset ( &readBuffer,0,READ_BUFF_SIZE );
                                     ansigetxy = false;
                                     return false;
                                 }
                                 // Other Escape Code's goes here for input!
-                                else {
+                                else
+                                {
                                     // Capture Arror Key ESC Codes
                                     // If ESC KEy found Capute to Global ESC Bufer so
                                     // Function can pull it in and test it..
 
-                                    strcpy(EscapeKey,"");
+                                    strcpy ( EscapeKey,"" );
                                     EscapeKey[0] = readBuffer[index];    // char 27
                                     EscapeKey[1] = readBuffer[++index];  // char [
                                     EscapeKey[2] = readBuffer[++index];  // char Key
                                     //cout << EscapeKey;
-                                    memset(&readBuffer,0,READ_BUFF_SIZE);
+                                    memset ( &readBuffer,0,READ_BUFF_SIZE );
                                     return true;
                                 }
                             }
 
                             // If the character is a \r, send a newline as well, then terminate the command buffer and send
                             // the line to the command processor.
-                            else if( c == '\r' ) {
+                            else if ( c == '\r' )
+                            {
 
                                 //if( echoMode ) printf("\r\n");
                                 // User C++ Iostream for Consle I/O
@@ -869,40 +971,47 @@ bool ZTelnetServerSession::pollc(unsigned char &c) {
                                 inBuffer[inCursor] = '\0';
 
                                 inCursor = 0;
-                                memset(&inBuffer,0,sizeof(inBuffer));
+                                memset ( &inBuffer,0,sizeof ( inBuffer ) );
                                 return true;
                             }
-                            else if( c == 0x08 || int(c) == 127) { // 127 Linux Backspace
+                            else if ( c == 0x08 || int ( c ) == 127 ) // 127 Linux Backspace
+                            {
                                 // Destructively backspace.
-                                if( inCursor >= 0) {
+                                if ( inCursor >= 0 )
+                                {
                                     --inCursor;
-                                    if( echoMode ) {
+                                    if ( echoMode )
+                                    {
                                         //printf("%c %c", 0x08,0x08);
                                     }
                                 }
                                 // Standard C++ Console i/o
                                 //cout << "\b \b";
                                 inCursor = 0;
-                                memset(&inBuffer,0,sizeof(inBuffer));
+                                memset ( &inBuffer,0,sizeof ( inBuffer ) );
                                 return true;
                             }
-                            else if( c == '\n' || c == '\0' ) {
+                            else if ( c == '\n' || c == '\0' )
+                            {
                                 // HACK: Swallow newlines in the input,
                                 // so that Microsoft's POS telnet client will look right.
                                 // For some reason, I was getting '\0' characters
                                 // being sent down the line. Swallow them too.
                                 return false;
                             }
-                            else {
+                            else
+                            {
                                 // This character is to be kept, so add it to the inBuffer
                                 inBuffer[inCursor] = c;
                                 ++inCursor;
 
                                 // Echo this character.
-                                if( passwdMode ) {
-                                    if( echoMode ) printf("%c", passwdChar);
+                                if ( passwdMode )
+                                {
+                                    if ( echoMode ) printf ( "%c", passwdChar );
                                 }
-                                else {
+                                else
+                                {
                                     //if( echoMode ) printf("%c", c);
                                 }
 
@@ -911,11 +1020,12 @@ bool ZTelnetServerSession::pollc(unsigned char &c) {
 
 
                                 // Reset Buffer at 1 line of data received 80 chars
-                                if (inCursor > 79 || len == index) {
+                                if ( inCursor > 79 || len == index )
+                                {
                                     inCursor = 0;
                                 }
                                 inCursor = 0;
-                                memset(&inBuffer,0,sizeof(inBuffer));
+                                memset ( &inBuffer,0,sizeof ( inBuffer ) );
                                 return true;
                             }
                         }
@@ -924,28 +1034,34 @@ bool ZTelnetServerSession::pollc(unsigned char &c) {
                 break;
 
             case ST_ESCAPE:
-                if( c == CMD_IAC ) {
+                if ( c == CMD_IAC )
+                {
                     // This was not a command, but simply an escaped
                     // CMD_IAC character. Store a CMD_IAC in the in buffer and
                     // return to the default state.
-                    if( inSubOpt ) {
+                    if ( inSubOpt )
+                    {
                         // Add the character to the subOpt buffer
                     }
-                    else {
+                    else
+                    {
                         inBuffer[inCursor++] = c;
                     }
                     recvState = ST_DEFAULT;
                 }
-                else {
+                else
+                {
                     // This is a command sequence, store it and change the state.
                     cmdId = c;
                     recvState = ST_COMMAND;
                 }
                 break;
 
-            case ST_COMMAND: {
+            case ST_COMMAND:
+                {
                     // The last part of a command sequence
-                    switch( c ) {
+                    switch ( c )
+                    {
                         case CMD_WILL:
                         case CMD_WONT:
                         case CMD_DO:
@@ -978,59 +1094,65 @@ bool ZTelnetServerSession::pollc(unsigned char &c) {
     }
     // Write any available output without blocking.
     /*  ZBS removed and converted to immediate write
-	if( outCursor > 0 ) {
-		int result = z->write( outBuffer, outCursor, 0 );
-		if( result == -1 ) {
-			stop();
-			return 0;
-		}
-		else {
-			memmove( outBuffer, outBuffer+result, outCursor-result );
-			outCursor -= result;
-		}
-	}
+    if( outCursor > 0 ) {
+        int result = z->write( outBuffer, outCursor, 0 );
+        if( result == -1 ) {
+            stop();
+            return 0;
+        }
+        else {
+            memmove( outBuffer, outBuffer+result, outCursor-result );
+            outCursor -= result;
+        }
+    }
     */
 
 
-    return (false);
+    return ( false );
 }
 
 
 // ZTelnetServer
 //--------------------------------------------------------------------
 
-ZTelnetServer::ZTelnetServer() {
+ZTelnetServer::ZTelnetServer()
+{
     handler = NULL;
     listening = NULL;
 }
 
-ZTelnetServer::ZTelnetServer( int port, ZTelnetServerCmdHandler *_handler ) {
+ZTelnetServer::ZTelnetServer ( int port, ZTelnetServerCmdHandler *_handler )
+{
     handler = NULL;
     listening = NULL;
-    start( port );
-    setCmdHandler( _handler );
+    start ( port );
+    setCmdHandler ( _handler );
 }
 
-ZTelnetServer::~ZTelnetServer() {
+ZTelnetServer::~ZTelnetServer()
+{
     // Stop all active sessions
     stop ();
     handler = NULL;
 }
 
-int ZTelnetServer::start( int port ) {
-    assert(listening == NULL);
+int ZTelnetServer::start ( int port )
+{
+    assert ( listening == NULL );
 
     char zAddress[100];
-    sprintf( zAddress, "tcp(lbr)://*:%d", port );
-    listening = new Zocket( zAddress );
+    sprintf ( zAddress, "tcp(lbr)://*:%d", port );
+    listening = new Zocket ( zAddress );
 
-    if( !listening->isOpen() ) {
+    if ( !listening->isOpen() )
+    {
         return 0;
     }
     return 1;
 }
 
-int ZTelnetServer::stop() {
+int ZTelnetServer::stop()
+{
     if ( !listening )
     {
         return 1;
@@ -1038,8 +1160,10 @@ int ZTelnetServer::stop() {
 
     if ( listening->isOpen() )
     {
-        for( int i=0; i<zTelnetServer_MAX_SESSIONS; ++i ) {
-            if( session[i].isActive() ) {
+        for ( int i=0; i<zTelnetServer_MAX_SESSIONS; ++i )
+        {
+            if ( session[i].isActive() )
+            {
                 session[i].stop();
 
             }
@@ -1050,11 +1174,14 @@ int ZTelnetServer::stop() {
     return 1;
 }
 
-void ZTelnetServer::setCmdHandler( ZTelnetServerCmdHandler *_handler ) {
+void ZTelnetServer::setCmdHandler ( ZTelnetServerCmdHandler *_handler )
+{
     handler = _handler;
-    for( int i = 0; i < zTelnetServer_MAX_SESSIONS; ++i ) {
-        if( session[i].isActive() ) {
-            session[i].setCmdHandler( _handler );
+    for ( int i = 0; i < zTelnetServer_MAX_SESSIONS; ++i )
+    {
+        if ( session[i].isActive() )
+        {
+            session[i].setCmdHandler ( _handler );
         }
     }
 }
@@ -1062,26 +1189,31 @@ void ZTelnetServer::setCmdHandler( ZTelnetServerCmdHandler *_handler ) {
 // Main Processing Routiene
 //--------------------------------------------------------------------
 
-int ZTelnetServer::poll() {
+int ZTelnetServer::poll()
+{
 
     int i;
 
     // Handle to Threads
     HANDLE ahThread[zTelnetServer_MAX_SESSIONS];
 
-    if( listening->isOpen() ) {
+    if ( listening->isOpen() )
+    {
         // Check for a new connection
 
-        int sockFD = listening->accept( 0 );
-        if( sockFD > 0 ) {
+        int sockFD = listening->accept ( 0 );
+        if ( sockFD > 0 )
+        {
 
-            Zocket  *z = new Zocket( listening );
+            Zocket  *z = new Zocket ( listening );
 
             // Find an inactive session and initialize it with this zocket.
             // If there is no inactive session, close the zocket.
 
-            for( i = 0; i < zTelnetServer_MAX_SESSIONS; ++i ) {
-                if( !session[i].isActive() ) {
+            for ( i = 0; i < zTelnetServer_MAX_SESSIONS; ++i )
+            {
+                if ( !session[i].isActive() )
+                {
 
                     // Fill Structure for Passing to new Thread
 
@@ -1089,11 +1221,11 @@ int ZTelnetServer::poll() {
 
                     //PASSING *pass = new PASSING;
 
-                    ms->pass->handler = (ZTelnetServerCmdHandler *) handler; // Command Handler
-                    ms->pass->session = &session[i];  						 // Session Handler
-                    ms->pass->z = z;                  						 // Socket  Handler
+                    ms->pass->handler = ( ZTelnetServerCmdHandler * ) handler; // Command Handler
+                    ms->pass->session = &session[i];                           // Session Handler
+                    ms->pass->z = z;                                           // Socket  Handler
 
-                    ahThread[i] = (HANDLE)_beginthread( StartSessionThread, 0, ms);
+                    ahThread[i] = ( HANDLE ) _beginthread ( StartSessionThread, 0, ms );
 
                     /*
                     This is Where each new Telnet Session is started on Connection,
@@ -1113,7 +1245,8 @@ int ZTelnetServer::poll() {
                 }
             }
 
-            if( i >= zTelnetServer_MAX_SESSIONS ) {
+            if ( i >= zTelnetServer_MAX_SESSIONS )
+            {
                 delete z;
             }
         }
@@ -1135,40 +1268,50 @@ int ZTelnetServer::poll() {
     return 1;
 }
 
-int ZTelnetServer::fillOutSet( void *readSet, void *writeSet, void *exceptSet ) {
+int ZTelnetServer::fillOutSet ( void *readSet, void *writeSet, void *exceptSet )
+{
     // Fill out the set for each catagory from the listening zocket and each active zocket.
     int largest = 0;
-    if( listening->isOpen() ) {
-        if( readSet != NULL ) {
-            zocketFdSet( listening->getSockFD(), readSet );
-            largest = max( largest, listening->getSockFD() );
+    if ( listening->isOpen() )
+    {
+        if ( readSet != NULL )
+        {
+            zocketFdSet ( listening->getSockFD(), readSet );
+            largest = max ( largest, listening->getSockFD() );
         }
 
-        if( writeSet != NULL ) {
-            zocketFdSet( listening->getSockFD(), writeSet );
-            largest = max( largest, listening->getSockFD() );
+        if ( writeSet != NULL )
+        {
+            zocketFdSet ( listening->getSockFD(), writeSet );
+            largest = max ( largest, listening->getSockFD() );
         }
 
-        if( exceptSet != NULL ) {
-            zocketFdSet( listening->getSockFD(), exceptSet );
-            largest = max( largest, listening->getSockFD() );
+        if ( exceptSet != NULL )
+        {
+            zocketFdSet ( listening->getSockFD(), exceptSet );
+            largest = max ( largest, listening->getSockFD() );
         }
 
-        for( int i = 0; i < zTelnetServer_MAX_SESSIONS; ++i ) {
-            if( session[i].isActive() ) {
-                if( readSet != NULL ) {
-                    zocketFdSet( session[i].getSockFD(), readSet );
-                    largest = max( largest, session[i].getSockFD() );
+        for ( int i = 0; i < zTelnetServer_MAX_SESSIONS; ++i )
+        {
+            if ( session[i].isActive() )
+            {
+                if ( readSet != NULL )
+                {
+                    zocketFdSet ( session[i].getSockFD(), readSet );
+                    largest = max ( largest, session[i].getSockFD() );
                 }
 
-                if( writeSet != NULL ) {
-                    zocketFdSet( session[i].getSockFD(), writeSet );
-                    largest = max( largest, session[i].getSockFD() );
+                if ( writeSet != NULL )
+                {
+                    zocketFdSet ( session[i].getSockFD(), writeSet );
+                    largest = max ( largest, session[i].getSockFD() );
                 }
 
-                if( exceptSet != NULL ) {
-                    zocketFdSet( session[i].getSockFD(), exceptSet );
-                    largest = max( largest, session[i].getSockFD() );
+                if ( exceptSet != NULL )
+                {
+                    zocketFdSet ( session[i].getSockFD(), exceptSet );
+                    largest = max ( largest, session[i].getSockFD() );
                 }
             }
         }
@@ -1176,52 +1319,57 @@ int ZTelnetServer::fillOutSet( void *readSet, void *writeSet, void *exceptSet ) 
     return largest;
 }
 
-int main(int argc, char **argv) {
+int main ( int argc, char **argv )
+{
 
-    #ifdef _WIN32
-    SetConsoleTitle(VERSION);
-    #endif
+#ifdef _WIN32
+    SetConsoleTitle ( VERSION );
+#endif
 
 
     // Setup Global Path in Structs.h
     char parg[255];
-    strcpy(parg,argv[0]);
+    strcpy ( parg,argv[0] );
     int num = 0;
 
     // Get FULL PATH TO EXE, and Chop off Filename for PATH
-    for (int i = 0; ;i++) {
-        if (parg[i] == '\0') break;
-        if (parg[i] == '\\') num = i;
+    for ( int i = 0; ; i++ )
+    {
+        if ( parg[i] == '\0' ) break;
+        if ( parg[i] == '\\' ) num = i;
     }
-    if (num != 0) {
-        for (int i = 0; i < num+1; i++) {
-           BBSPATH[i] = parg[i];
+    if ( num != 0 )
+    {
+        for ( int i = 0; i < num+1; i++ )
+        {
+            BBSPATH[i] = parg[i];
         }
-        SetCurrentDirectory(BBSPATH);
+        SetCurrentDirectory ( BBSPATH );
     }
-    else {
-        strcpy(BBSPATH, "");
+    else
+    {
+        strcpy ( BBSPATH, "" );
     }
-    strcpy(DATAPATH,"data\\");
-    strcpy(MENUPATH,"menu\\");
-    strcpy(ANSIPATH,"ansi\\");
-    strcpy(MESGPATH,"msgs\\");
+    strcpy ( DATAPATH,"data\\" );
+    strcpy ( MENUPATH,"menu\\" );
+    strcpy ( ANSIPATH,"ansi\\" );
+    strcpy ( MESGPATH,"msgs\\" );
 
     // Do Error Checking if CONFIG.CFG File exists, if not creates it
-    if(configdataexists() == false) createconfig(); // Creates Config with Default Settings
+    if ( configdataexists() == false ) createconfig(); // Creates Config with Default Settings
 
     // Open and Read Config file
     parseconfig();
 
     // Compile Language File on Startup
     language *lang = new language;
-    printf("\nCompiling Language File");
+    printf ( "\nCompiling Language File" );
     lang->lang_compile();
-    printf("\nLanguage File Completed!\n");
+    printf ( "\nLanguage File Completed!\n" );
     delete lang;
 
-    ZTelnetServer rCmdServer( 2000, handler );
-    printf( "\n%s \nInitalized on port 2000! ", VERSION );
+    ZTelnetServer rCmdServer ( 2000, handler );
+    printf ( "\n%s \nInitalized on port 2000! ", VERSION );
 
     // The server runs a non-blocking interface that requires
     // an occasional call to poll.  You can either call this poll
@@ -1235,22 +1383,21 @@ int main(int argc, char **argv) {
     // which is the OS friendly way to do it.
 
 
-    while( 1 ) {
+    while ( 1 )
+    {
 
         fd_set readSet;
         fd_set exceptSet;
 
-        FD_ZERO( &readSet );
-        FD_ZERO( &exceptSet );
+        FD_ZERO ( &readSet );
+        FD_ZERO ( &exceptSet );
 
-        int largest = rCmdServer.fillOutSet( &readSet, NULL, &exceptSet );
-        int _select = select( largest+1, &readSet, NULL, &exceptSet, NULL );
-            // This select will block until one of the file handles has
-            // data or exception pending.
+        int largest = rCmdServer.fillOutSet ( &readSet, NULL, &exceptSet );
+        int _select = select ( largest+1, &readSet, NULL, &exceptSet, NULL );
+        // This select will block until one of the file handles has
+        // data or exception pending.
 
         rCmdServer.poll();
     }
     return 0;
 }
-
-

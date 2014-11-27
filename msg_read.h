@@ -11,20 +11,20 @@
 
 typedef struct {
 
-	char From[XMSG_FROM_SIZE];
-	char To[XMSG_TO_SIZE];
-	char Subj[XMSG_SUBJ_SIZE];
-	char AreaName[61];
-	struct _stamp date_written;
-	struct _stamp date_arrived;
-	char *Text;
-	int colors[4];
-	unsigned int replyto, replies[MAX_REPLY];
-	unsigned int num_msg, cur_msg, high_msg, high_water;
-	unsigned long attr;
-	NETADDR orig;
-	NETADDR dest;
-	
+    char From[XMSG_FROM_SIZE];
+    char To[XMSG_TO_SIZE];
+    char Subj[XMSG_SUBJ_SIZE];
+    char AreaName[61];
+    struct _stamp date_written;
+    struct _stamp date_arrived;
+    char *Text;
+    int colors[4];
+    unsigned int replyto, replies[MAX_REPLY];
+    unsigned int num_msg, cur_msg, high_msg, high_water;
+    unsigned long attr;
+    NETADDR orig;
+    NETADDR dest;
+
 }MsgInfoRec;
 
 class msg_read {
@@ -32,18 +32,18 @@ class msg_read {
     private:
     PASSING      *pass;       // Socket Info
     UserRec      *thisuser;   // User Info
-    
+
     msg_func     _menuf;      // Message Base I/O
     msgread_ini  _mread_ini;  // Message Reader INI for Text box
-    
+
     // Message API Functions
     MsgInfoRec    MI;
     MSGA         *AHandle;
     XMSG          xmsg;
     mb_list_rec   mr;
-    MSGH         *mh;   
-    HMSG          hmsg;    
-    
+    MSGH         *mh;
+    HMSG          hmsg;
+
     typedef struct MsgHead {
 
         char curmsg[10];
@@ -54,33 +54,33 @@ class msg_read {
         char flags[10];
         char time[20];
         char area[30];
-    
+
     }MsgHead;
-    
-    MsgHead mHead;    
+
+    MsgHead mHead;
     msg_ll  mLink;
-            
+
     int Top;
     int Bot;
-    
-    public:      
+
+    public:
     msg_read();
     void start(PASSING *passing, UserRec *user);
-    
+
     // Parsing the Message Header
     void ParseMRead(char *filename);
-          
+
     // Message Posting Functions
     int  get_subject(XMSG *xm);
     int  get_to(XMSG *xm);
     void get_address(XMSG *xm);
-    int  SaveMsg(unsigned long msgarea, unsigned long msgnum, int New);    
+    int  SaveMsg(unsigned long msgarea, unsigned long msgnum, int New);
     void PostMsg(int mbnum, bool Reply);
     void MakeCtrlHdr(char *reply);
     void GetMsgID(char *reply);
     void fill_xmsg(char *from, char *to, char *subj);
     void PostReplyMsg(int mbnum);
-          
+
     // Message Reader Functions
     void Add2MsgInfo();
     void CloseMsgArea();
@@ -102,7 +102,7 @@ class msg_read {
     int  ReadOrScanMsgs(int ros, int multi);
     bool ReadMessages(unsigned long marea);
     void start_reading();
-    
+
 
 };
 

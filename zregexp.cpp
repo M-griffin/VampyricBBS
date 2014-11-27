@@ -40,86 +40,104 @@ using namespace std;
 char ZRegExp::buffs[4][4096];
 int ZRegExp::buffCycle = 0;
 
-ZRegExp::ZRegExp( char *pattern ) {
+ZRegExp::ZRegExp ( char *pattern )
+{
     testString = NULL;
     matchBuf = NULL;
-    compiledPatBuf = (char *)malloc( sizeof(regex_t) );
+    compiledPatBuf = ( char * ) malloc ( sizeof ( regex_t ) );
 
-    err = regcomp( (regex_t *)compiledPatBuf, pattern, 0 );
-    if( !err ) {
+    err = regcomp ( ( regex_t * ) compiledPatBuf, pattern, 0 );
+    if ( !err )
+    {
         int parenCount = 0;
-        for( char *c = pattern; *c; c++ ) {
-            if( *c == '(' ) {
+        for ( char *c = pattern; *c; c++ )
+        {
+            if ( *c == '(' )
+            {
                 parenCount++;
             }
         }
 
         matchBufSize = parenCount + 1;
-        matchBuf = (char *)malloc( sizeof(regmatch_t) * matchBufSize );
+        matchBuf = ( char * ) malloc ( sizeof ( regmatch_t ) * matchBufSize );
     }
 }
 
-ZRegExp::~ZRegExp() {
-    regfree( (regex_t *)compiledPatBuf );
-    free( compiledPatBuf );
-    if( matchBuf ) {
-        free( matchBuf );
+ZRegExp::~ZRegExp()
+{
+    regfree ( ( regex_t * ) compiledPatBuf );
+    free ( compiledPatBuf );
+    if ( matchBuf )
+    {
+        free ( matchBuf );
     }
-    if( testString ) {
-        free( testString );
+    if ( testString )
+    {
+        free ( testString );
     }
 }
 
-int ZRegExp::test( char *s ) {
-    if( testString ) {
-        free( testString );
+int ZRegExp::test ( char *s )
+{
+    if ( testString )
+    {
+        free ( testString );
         testString = NULL;
     }
-    testString = strdup( s );
+    testString = strdup ( s );
     int _err = 0;
-    if( err == 0 ) {
-        _err = regexec( (regex_t *)compiledPatBuf, s, matchBufSize, (regmatch_t *)matchBuf, 0 );
+    if ( err == 0 )
+    {
+        _err = regexec ( ( regex_t * ) compiledPatBuf, s, matchBufSize, ( regmatch_t * ) matchBuf, 0 );
     }
     return _err == 0;
 }
 
-char *ZRegExp::get( int i ) {
-    buffCycle = (buffCycle+1) % 4;
-    return get( i, buffs[buffCycle], 4096 );
+char *ZRegExp::get ( int i )
+{
+    buffCycle = ( buffCycle+1 ) % 4;
+    return get ( i, buffs[buffCycle], 4096 );
 }
 
-char *ZRegExp::get( int i, char *dst, int dstSize ) {
-    int pos = getPos( i );
-    int len = getLen( i );
+char *ZRegExp::get ( int i, char *dst, int dstSize )
+{
+    int pos = getPos ( i );
+    int len = getLen ( i );
     len = len < dstSize ? len : dstSize;
-    if( pos >= 0 ) {
-        memcpy( dst, &testString[pos], len );
-        if( len < dstSize ) {
+    if ( pos >= 0 )
+    {
+        memcpy ( dst, &testString[pos], len );
+        if ( len < dstSize )
+        {
             dst[len] = 0;
         }
     }
-    else {
+    else
+    {
         *dst = 0;
     }
     return dst;
 }
 
-char *ZRegExp::getDup( int i ) {
-    int len = getLen( i );
-    if( len >= 0 ) {
-        char *b = (char *)malloc( len + 1 );
-        get( i, b, len+1 );
+char *ZRegExp::getDup ( int i )
+{
+    int len = getLen ( i );
+    if ( len >= 0 )
+    {
+        char *b = ( char * ) malloc ( len + 1 );
+        get ( i, b, len+1 );
         b[len] = 0;
         return b;
     }
     return NULL;
 }
 
-int ZRegExp::getPos( int i ) {
-    return ((regmatch_t *)matchBuf)[i].rm_so;
+int ZRegExp::getPos ( int i )
+{
+    return ( ( regmatch_t * ) matchBuf ) [i].rm_so;
 }
 
-int ZRegExp::getLen( int i ) {
-    return ((regmatch_t *)matchBuf)[i].rm_eo - ((regmatch_t *)matchBuf)[i].rm_so;
+int ZRegExp::getLen ( int i )
+{
+    return ( ( regmatch_t * ) matchBuf ) [i].rm_eo - ( ( regmatch_t * ) matchBuf ) [i].rm_so;
 }
-

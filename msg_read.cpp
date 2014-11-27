@@ -18,16 +18,16 @@ typedef enum {LOCAL, NETMAIL, ECHOMAIL, EMAIL, NEWS} MSGTYPE;
 typedef enum {PUBLIC, PRIVATE} POSTTYPE;
 
 
-#define MSG_QUOTE	0
-#define MSG_TEXT	1
-#define MSG_TEAR	2
-#define MSG_ORIGIN	3
+#define MSG_QUOTE    0
+#define MSG_TEXT    1
+#define MSG_TEAR    2
+#define MSG_ORIGIN    3
 
 #define BUFLEN 64000
 #define CTLLEN 1024
 
 char          buff[BUFLEN];
-static   char cinfbuf[CTLLEN];  // control info buffer 
+static   char cinfbuf[CTLLEN];  // control info buffer
 unsigned long buflen = 0L, cinflen = 0L;
 
 unsigned long MH,ML,MO,MR;
@@ -37,7 +37,7 @@ msg_read::msg_read() {
     memset(&pass,0,sizeof(PASSING));
     mh      = NULL;
     AHandle = NULL;
-            
+
     Top = 1;
     Bot = 1;
 
@@ -47,12 +47,12 @@ void msg_read::start(PASSING *passing, UserRec *user) {
 
     pass     = passing;
     thisuser = user;
-    
+
     // Do quick Message Reader ini parsing
     if (!_mread_ini.msg_exists()) {
         _mread_ini.msg_create();
     }
-    
+
     _mread_ini.msg_parse();
     Top = _mread_ini.Top;
     Bot = _mread_ini.Bot;
@@ -61,14 +61,14 @@ void msg_read::start(PASSING *passing, UserRec *user) {
 
 void msg_read::ParseMRead(char *filename) {
 
-    char szDateFormat[128];	// System Date
-    char szTimeFormat[128];	// System Time
+    char szDateFormat[128];    // System Date
+    char szTimeFormat[128];    // System Time
 
     int c;
     long int size;
     char *AnsiBuf;
     std::string temp;
-    
+
     std::string path = ANSIPATH;
     path += filename;
     path += ".ans";
@@ -86,39 +86,39 @@ void msg_read::ParseMRead(char *filename) {
     if ((inStream = fopen(path.c_str(), "r+")) ==  NULL) {
         return;
     }
-    
+
     char MCI[3]; // Holds MCI Codes to Parse
     temp = "";   // Holds Ansi
     do {
         memset(&MCI,0,sizeof(MCI));
         c = getc(inStream);
-        
+
         if (c == '%') {
             MCI[0] = getc(inStream);
-			MCI[1] = getc(inStream);
-			
-			if (strcmp(MCI,"TI") == 0)      { temp += mHead.time;   }
-			else if (strcmp(MCI,"FM") == 0) { temp += mHead.from;   }
-			else if (strcmp(MCI,"TO") == 0) { temp += mHead.to;     }
-			else if (strcmp(MCI,"FL") == 0) { temp += mHead.flags;  }
-			else if (strcmp(MCI,"MA") == 0) { temp += mHead.area;   }
-			else if (strcmp(MCI,"SU") == 0) { temp += mHead.subj;   }
-			else if (strcmp(MCI,"CM") == 0) { temp += mHead.curmsg; }
-			else if (strcmp(MCI,"HM") == 0) { temp += mHead.totmsg; }
-			else { temp += c; temp += MCI; }
-			
-			temp += getc(inStream);
-		}
-		
+            MCI[1] = getc(inStream);
+
+            if (strcmp(MCI,"TI") == 0)      { temp += mHead.time;   }
+            else if (strcmp(MCI,"FM") == 0) { temp += mHead.from;   }
+            else if (strcmp(MCI,"TO") == 0) { temp += mHead.to;     }
+            else if (strcmp(MCI,"FL") == 0) { temp += mHead.flags;  }
+            else if (strcmp(MCI,"MA") == 0) { temp += mHead.area;   }
+            else if (strcmp(MCI,"SU") == 0) { temp += mHead.subj;   }
+            else if (strcmp(MCI,"CM") == 0) { temp += mHead.curmsg; }
+            else if (strcmp(MCI,"HM") == 0) { temp += mHead.totmsg; }
+            else { temp += c; temp += MCI; }
+
+            temp += getc(inStream);
+        }
+
         else if (c == '\n') temp += '\r';
         else temp += c;
 
     }
     while (c != EOF);
     fclose(inStream);
-    
+
     temp += "\r\n"; // Extra Space to Fix Next Ansi Sequence
-    while ( pass->session->isActive() ) {    
+    while ( pass->session->isActive() ) {
         if (pass->session->puts((char *)temp.c_str()) > 1 ) break;
         Sleep(10);
     }
@@ -216,10 +216,10 @@ void msg_read::get_address(XMSG *xm) {
     xm->dest.point= 0;
 
     *faddr='\0';
-    
+
     //language(1113);
     //get_str(faddr,20);
-    
+
     zone = strtok(faddr,":/.\n\r");
     if(zone) {
         xm->dest.zone = atoi(zone);
@@ -240,12 +240,12 @@ void msg_read::get_address(XMSG *xm) {
 
 
 int msg_read::get_subject(XMSG *xm) {
-   
-    char text[100]={0};    
+
+    char text[100]={0};
     language _lang;
     _lang.lang_get(text,19);
     pipe2ansi(pass,text);
-               
+
     get_str(pass,(char*)xm->subj);
     if(strlen((const char*)xm->subj) < 1)
         return FALSE;
@@ -254,8 +254,8 @@ int msg_read::get_subject(XMSG *xm) {
 }
 
 int msg_read::get_to(XMSG *xm) {
-   
-    char text[100]={0};    
+
+    char text[100]={0};
     language _lang;
     _lang.lang_get(text,20);
     pipe2ansi(pass,text);
@@ -298,7 +298,7 @@ void msg_read::PostMsg(int mbnum, bool Reply) {
     xmsg.orig.net   = mr.aka.net;
     xmsg.orig.node  = mr.aka.node;
     xmsg.orig.point = mr.aka.point;
-    
+
     time(&timet);
     tm = localtime(&timet);
     xmsg.date_written = *timeTToStamp(timet);
@@ -312,26 +312,26 @@ void msg_read::PostMsg(int mbnum, bool Reply) {
         xmsg.attr |= MSGPRIVATE;
         xmsg.attr |= MSGCRASH;
     }
-    
+
     if(!get_subject(&xmsg)) return;
     if(!get_to(&xmsg)) return;
-    
+
     strcpy((char*)xmsg.from, thisuser->Handle);
-        
+
     // Start Full Screen Editor... Gets Message Into Buff
-    msg_fse _mpost;    
-    _mpost.start(pass); 
+    msg_fse _mpost;
+    _mpost.start(pass);
     memset(&buff,0,sizeof(buff));
     _mpost.poll_chr(buff);
-      
+
     language _lang;
-    char text[100]={0};                 
+    char text[100]={0};
     unsigned char c;
-    
-    // Do we really want to save this message?    
+
+    // Do we really want to save this message?
     _lang.lang_get(text,21);
     pipe2ansi(pass,text);
-        
+
     // Set this up for lightbar later! MMM MMM
     get_chr(pass,c);
     if((int)c == 13 || toupper(c) == 'Y') {
@@ -348,10 +348,10 @@ void msg_read::PostMsg(int mbnum, bool Reply) {
         for(int i = 0; i < 10; i++)
             xmsg.replies[i] = 0;
     }
-    
+
     /*
     if(mr.Type != LOCAL)
-        add_origin(&mr); */                        
+        add_origin(&mr); */
 
     SaveMsg(mbnum,0,TRUE);
 }
@@ -430,15 +430,15 @@ void msg_read::PostReplyMsg(int mbnum)
     strrepl(reply,50,"MSGID","REPLY");
 
     MakeCtrlHdr(reply);
-    
+
     // Get Message Text that we are replying to here
     // MsgExtractTxt();
-    
+
     if(mr.Allowalias)
         fill_xmsg(thisuser->Handle,(char*)xmsg.from,(char*)xmsg.subj);
     else
         fill_xmsg(thisuser->Name,(char*)xmsg.from,(char*)xmsg.subj);
-        
+
     for(i = 0; i < 9; i++){
         if(!xmsg.replies[i]){
             xmsg.replies[i] = thisuser->lastmsg;
@@ -451,7 +451,7 @@ void msg_read::PostReplyMsg(int mbnum)
     //char2A(1,xmsg.to);
     //Get Language prompt here for confirmation of user
     //pass->session->printf(
-    
+
     /*
     if(mr.Pubpriv == PRIVATE){
         language(1104);
@@ -459,9 +459,9 @@ void msg_read::PostReplyMsg(int mbnum)
     else{
         language(1102);
     }*/
-    
+
     /*
-    if(!get_to(&xmsg)) return;   
+    if(!get_to(&xmsg)) return;
     if(strlen((char*)xmsg.to) < 1) return;
     */
 
@@ -503,7 +503,7 @@ void msg_read::Add2MsgInfo() {
     MO = MI.cur_msg;
     MH = MI.high_msg;
     ML = 1L;
-    
+
     for(int i = 0; i < 10; i++) {
         if(xmsg.replies[i] != 0){
             MI.replies[i]   = xmsg.replies[i];
@@ -518,7 +518,7 @@ void msg_read::CloseMsgArea() {
         AHandle = NULL;
     }
     AHandle = NULL;
-    
+
 }
 
 int msg_read::OpenMsgArea(unsigned long mbnum) {
@@ -532,18 +532,18 @@ int msg_read::OpenMsgArea(unsigned long mbnum) {
         return FALSE;
     }
     sprintf(path,"%s%s",mr.mbpath, mr.mbfile);
-    
+
     if (AHandle != NULL) {
         MsgCloseArea(AHandle);
     }
-    
-    AHandle = MsgOpenArea((byte *)path, MSGAREA_CRIFNEC, mr.Type);    
-    if (AHandle == NULL) {  
+
+    AHandle = MsgOpenArea((byte *)path, MSGAREA_CRIFNEC, mr.Type);
+    if (AHandle == NULL) {
         retval = false;
         printf("\r\nAHandle == NULL");
     }
-    else Add2MsgInfo();        
-    
+    else Add2MsgInfo();
+
     return retval;
 }
 
@@ -551,7 +551,7 @@ time_t msg_read::stampToTimeT(struct _stamp *st) {
 
     time_t tt;
     struct tm tms;
-    
+
     tms.tm_sec = st->time.ss << 1;
     tms.tm_min = st->time.mm;
     tms.tm_hour = st->time.hh;
@@ -567,7 +567,7 @@ struct _stamp *msg_read::timeTToStamp(time_t tt) {
 
     struct tm *tmsp;
     static struct _stamp st;
-    
+
     tmsp = localtime(&tt);
     st.time.ss = tmsp->tm_sec >> 1;
     st.time.mm = tmsp->tm_min;
@@ -637,72 +637,72 @@ void msg_read::SetupMsgHdr() {
     mtm = localtime(&tmt);
     strftime(timestr,81,"%H:%M  %m/%d/%Y",mtm);
 
-    sprintf(mHead.curmsg,"%i", thisuser->lastmsg); 
+    sprintf(mHead.curmsg,"%i", thisuser->lastmsg);
     sprintf(mHead.totmsg,"%i", MsgNumMsg(AHandle));
     strcpy(mHead.from,  namestr);
     strcpy(mHead.to,    tostr);
     strcpy(mHead.subj,  MI.Subj);
     strcpy(mHead.flags, fflags);
     strcpy(mHead.time,  timestr);
-    strcpy(mHead.area,  MI.AreaName);    
-    
+    strcpy(mHead.area,  MI.AreaName);
+
 }
 
 char *msg_read::strrepl(char *Str, size_t BufSiz, const char *OldStr, const char *NewStr) {
 
-	int OldLen, NewLen;
-	char *p, *q;
+    int OldLen, NewLen;
+    char *p, *q;
 
-	if(NULL == (p = strstr(Str, OldStr)))
-		return Str;
-	OldLen = strlen(OldStr);
-	NewLen = strlen(NewStr);
-	if ((strlen(Str) + NewLen - OldLen + 1) > BufSiz)
-		return NULL;
-	memmove(q = p+NewLen, p+OldLen, strlen(p+OldLen)+1);
-	memcpy(p, NewStr, NewLen);
-	return q;
+    if(NULL == (p = strstr(Str, OldStr)))
+        return Str;
+    OldLen = strlen(OldStr);
+    NewLen = strlen(NewStr);
+    if ((strlen(Str) + NewLen - OldLen + 1) > BufSiz)
+        return NULL;
+    memmove(q = p+NewLen, p+OldLen, strlen(p+OldLen)+1);
+    memcpy(p, NewStr, NewLen);
+    return q;
 }
- 
+
 void msg_read::stripCR(char *ostr) {
 
-	while(strchr(ostr,'\n')) strrepl(ostr,500,"\n","");
-	while(strchr(ostr,'\r')) strrepl(ostr,500,"\r","");
-	while(strchr(ostr,'\b')) strrepl(ostr,500,"\b","");
-	while(strchr(ostr,'\x1b')) strrepl(ostr,500,"\x1b","");
+    while(strchr(ostr,'\n')) strrepl(ostr,500,"\n","");
+    while(strchr(ostr,'\r')) strrepl(ostr,500,"\r","");
+    while(strchr(ostr,'\b')) strrepl(ostr,500,"\b","");
+    while(strchr(ostr,'\x1b')) strrepl(ostr,500,"\x1b","");
 }
 
 void msg_read::MsgSetupTxt() {
 
     std::string MsgText = buff;
     std::string Line;
-    int id1 = 0;    
+    int id1 = 0;
     int i = 0;
 
     // Setup the Message Header
     SetupMsgHdr();
-    
-    while(pass->session->isActive()) {            
-    
-        Line = "";                
-        id1  = MsgText.find("\r", 1);  // Each Line ends with '\r'        
-        
+
+    while(pass->session->isActive()) {
+
+        Line = "";
+        id1  = MsgText.find("\r", 1);  // Each Line ends with '\r'
+
         // Make Sure only to Add New Lines when being used,
         // First Line is already Setup! So Skip it
         if (id1 != -1 && i != 0) mLink.add_to_list("");
-       
+
         if (id1 == -1) break;
         else {
             Line = MsgText.substr(0,id1);
             MsgText.erase(0,id1);
-            
-            if (Line.size() > 0) {                 
-                Line += "\r\n";                        
-                mLink.current_node->data = Line;                
+
+            if (Line.size() > 0) {
+                Line += "\r\n";
+                mLink.current_node->data = Line;
                 printf("\nSetup Line: %i, Size: %i", i+1, Line.size());
                 ++i;
             }
-        }        
+        }
     }
 }
 
@@ -716,7 +716,7 @@ void msg_read::GetMsg() {
     buflen = MsgGetTextLen(mh);
     MsgReadMsg(mh,NULL,0L,buflen,(byte *)buff,0L,NULL);
     Add2MsgInfo();
-        
+
 }
 
 int msg_read::SquishAreaSetLast(unsigned long usr,unsigned long lr) {
@@ -796,9 +796,9 @@ int msg_read::ReadMsg(unsigned long mbnum, unsigned long  msgnum, int showit) {
             //language(1318);  Message not available.
         retval = false;
     }
-    
+
     if (msgnum < 1) msgnum = 1;
-    if(msgnum < 1 || msgnum > MI.high_msg)  { 
+    if(msgnum < 1 || msgnum > MI.high_msg)  {
         retval = false;
     }
 
@@ -821,16 +821,16 @@ int msg_read::ReadOrScanMsgs(int ros, int multi) {
 
     int total_mbases = _menuf.msg_count();
     int retval = true;
-    
+
     do{
         if(ros) {
             retval = ReadMsg(thisuser->lastmbarea, thisuser->lastmsg, TRUE);
         }
         //else NextTenMsgs(thisuser->lastmbarea);
-        
+
         if(!retval && multi && thisuser->lastmbarea < total_mbases){
             thisuser->lastmbarea++;
-            
+
             if(OpenMsgArea(thisuser->lastmbarea)) {
                 thisuser->lastmsg = 1L;
                 thisuser->lastmsg = GetLastRead(thisuser->Number);
@@ -856,58 +856,58 @@ bool msg_read::ReadMessages(unsigned long marea) {
         printf("\r\nno messages.. .");
         return false;
     }
-    else {     
+    else {
         ReadOrScanMsgs(true,false);
-    }        
+    }
     return true;
 }
 
 void msg_read::start_reading() {
 
-    //s_fidoconfig *cfg;  
+    //s_fidoconfig *cfg;
     struct _minf m;
     m.req_version = 2;
-    
+
     /*
     mi.req_version = 0;
     mi.def_zone = 2;
     //m.haveshare   = 1;
     //m.def_zone  = cfg->addr[0].zone;
     */
-    
+
     // Startup the Husky Message API
     if (MsgOpenApi(&m)!= 0) {
         printf("\nMsgOpenApi Error.\n");
     }
 
     // Initalize Menu Function Class
-    menu_func _mf;                    
-    _mf.start(pass,thisuser);    
-    
+    menu_func _mf;
+    _mf.start(pass,thisuser);
+
     bool done = false;
     bool same = true;
     bool more = false;
-    char mString[10] = {0};    
+    char mString[10] = {0};
     unsigned char ch;
     int count;
-    
+
     std::string _output;
     char outBuffer[200];
-    
+
     // Startup Message Reader Link List for Holding Message Lines
     mLink.start(pass);
     mLink.Top = Top;
-    mLink.Bot = Bot;  
-    
+    mLink.Bot = Bot;
+
     mLink.add_to_list("");
     mLink.move_up();
-       
+
     // Run through Mesage Look untill exit from reader prompt
     while (pass->session->isActive() && !done) {
-          
-        memset(&mHead,0, sizeof(MsgHead));                
+
+        memset(&mHead,0, sizeof(MsgHead));
         same = true;
-        
+
         // Read in Current Users Message
         if (!ReadMessages(thisuser->lastmbarea)) {
             printf("\nErr: Unable to read messages");
@@ -916,7 +916,7 @@ void msg_read::start_reading() {
             same = false;
             break;
         }
-        
+
         /*
         // Check if message base is empty
         if (strcmp(mHead.totmsg,"") == 0) {
@@ -924,111 +924,111 @@ void msg_read::start_reading() {
             done = true;
             mLink.dispose_list();
             same = false;
-            break;        
+            break;
         }*/
-                
+
         // Reset Message Handler!
         if (AHandle != NULL) {
             CloseMsgArea();
-        }             
-    
-    
+        }
+
+
         // Setup Screen Display Ansi Header
-        pass->session->puts("\x1b[0m\x1b[2J");            
+        pass->session->puts("\x1b[0m\x1b[2J");
         ParseMRead("mread");
-        
+
         // Draw Message Inside of Box
-        mLink.box_start();        
-        
+        mLink.box_start();
+
         while(pass->session->isActive() && !done && same) {
-            
+
             _output = "";
             more = false;
             if (mLink.line_count() > 0) more = true;
-            
+
             // Show Down Arrow More!
             if (more) sprintf(outBuffer,"\x1b[24;3H|15\x19");
-            else sprintf(outBuffer,"\x1b[24;3H "); 
-            _output += outBuffer;          
-            
+            else sprintf(outBuffer,"\x1b[24;3H ");
+            _output += outBuffer;
+
             // Show up Arrow More
             if (mLink.Page > 1) sprintf(outBuffer,"\x1b[24;10H|15\x18");
             else sprintf(outBuffer,"\x1b[24;10H ");
             _output += outBuffer;
-            
+
             // Show Current/Total Pages
             sprintf(outBuffer,"\x1b[24;72H|15%i",mLink.Page);
             _output += outBuffer;
             sprintf(outBuffer,"\x1b[24;76H|15%i",mLink.TotPages);
             _output += outBuffer;
-            
+
             pipe2ansi(pass,(char *)_output.c_str());
-            
+
             // If more, Select Menu Prompt with PGDN as Default
             // Otherwise Select Prompt with Next as Default!
             if (more) strcpy(_mf._curmenu,"msgp2");   // Setup Message Prompt Menu
             else strcpy(_mf._curmenu,"msgp");              // Setup Message Prompt Menu
-            
+
             // Readin the Menu Prompt
             _mf.menu_readin();
 
-            // Process Messeage Promt with lightbar menu             
+            // Process Messeage Promt with lightbar menu
             _mf.menu_proc(mString);
-               
-            // Process Return Input from Lightbars, Next, Prev, Quit ...        
-            ch = mString[0];      
-                   
+
+            // Process Return Input from Lightbars, Next, Prev, Quit ...
+            ch = mString[0];
+
             switch (toupper(ch)) {
-            
-                case 'N': // Next Message                  
+
+                case 'N': // Next Message
                     mLink.Lines = 0;
                     count = atoi(mHead.totmsg);
                     if (thisuser->lastmsg != count) ++thisuser->lastmsg;
                     mLink.dispose();
                     same = false;
                     break;
-                
+
                 case 'P': // Previous Message
                     mLink.Lines = 0;
                     if (thisuser->lastmsg != 1) --thisuser->lastmsg;
                     mLink.dispose();
                     same = false;
                     break;
-                
-                case 'Q': // Quit Message Reading                
+
+                case 'Q': // Quit Message Reading
                     done = true;
                     mLink.dispose_list();
                     same = false;
-                    break;     
-                                       
+                    break;
+
                 case 'U': // Page UP
                     mLink.box_pgup();
                     break;
-                
+
                 case 'D': // Page Down
                     mLink.box_pgdn();
                     break;
-                    
+
                 case 'A': // Scroll Up 1 Line
                     mLink.box_pgup();
                     break;
-                    
+
                 case 'B': // Scroll down 1 Line
                     mLink.box_pgdn();
                     break;
-                    
+
                 case 'O': // Post a New Message
                     PostMsg(thisuser->lastmbarea, true);
                     same = false; // Refresh Message
                     break;
-                
-                default : 
+
+                default :
                     break;
-        
+
             }
-        }         
+        }
     }
 }
 
-    
-    
+
+
